@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.UserBean;
 
 @WebServlet("/ForgotPass")
@@ -39,9 +40,11 @@ public class ForgotPass extends HttpServlet {
         checkForgotpassDetails.setSecurityAns(securityAns);
 
         boolean check = Userdao.checkUserDetailsForForgotPass(checkForgotpassDetails);
-
+                
         if (check == true) {
-        
+            HttpSession session = request.getSession();
+            session.setAttribute("dob", dob);
+            session.setAttribute("securityAns", securityAns);
             response.sendRedirect("changePass.jsp");
         } else {
             RequestDispatcher rd = request.getRequestDispatcher("forgotpass.jsp");

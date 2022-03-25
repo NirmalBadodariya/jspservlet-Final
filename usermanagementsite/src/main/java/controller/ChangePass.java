@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/ChangePass")
 public class ChangePass extends HttpServlet {
@@ -30,7 +31,9 @@ public class ChangePass extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         String newPass = request.getParameter("newPass");
-
+        HttpSession session = request.getSession();
+        session.getAttribute("dob");
+        session.getAttribute("securityAns");
         Userdao.setNewPass(newPass);
                 
         response.sendRedirect("index.jsp");

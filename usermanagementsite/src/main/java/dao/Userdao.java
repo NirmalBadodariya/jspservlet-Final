@@ -40,7 +40,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 preparedStatement1.setInt(5, user.getPin());
                 preparedStatement1.setString(6, user.getState());
                 preparedStatement1.executeUpdate();
-                    
+
             } else {
                 System.out.println("Connection was not Esatablished");
             }
@@ -119,7 +119,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
             } else {
                 System.out.println("Connection was not Established");
             }
-
+            
         } catch (Exception e) {
             System.out.println(e);
         }

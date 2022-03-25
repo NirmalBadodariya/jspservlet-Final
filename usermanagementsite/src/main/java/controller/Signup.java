@@ -40,7 +40,7 @@ public class Signup extends HttpServlet {
             throws ServletException, IOException {
 
         Part filePart = request.getPart("image");
-
+                
         String firstName = request.getParameter("firstname");
         String lastName = request.getParameter("lastname");
         String email = request.getParameter("email");

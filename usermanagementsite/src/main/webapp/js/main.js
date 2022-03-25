@@ -45,7 +45,7 @@
 				var wrapper = this;
 
 				var container = $(wrapper).children(self.settings.container);
-
+				
 				// Disable all form elements inside the row template
 				$(container).children(self.settings.template).hide().find(':input').each(function() {
 					$(this).prop('disabled', true);

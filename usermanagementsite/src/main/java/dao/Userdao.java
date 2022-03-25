@@ -63,11 +63,11 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 while (rs.next()) {
                     if (rs.getString("email").equals(user.getEmail()) && rs.getString("pass").equals(user.getPass())) {
                         check = true;
-                        break;
+                        break;  
                     }
                 }
-
-            }
+                
+            }   
 
         } catch (Exception e) {
             System.out.println(e);

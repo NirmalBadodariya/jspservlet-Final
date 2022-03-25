@@ -73,7 +73,7 @@ public class Signup extends HttpServlet {
         newUser.setPin(pin);
         newUser.setState(state);
         Userdao.insertUser(newUser);
-
+                
 
         HttpSession session = request.getSession();
         session.setAttribute("id", newUser.getId() + "");

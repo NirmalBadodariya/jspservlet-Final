@@ -190,7 +190,7 @@
 								</tr>
 								</tbody>
 							</table> 
-						
+                            
 					</div>
 					<br><br>
 				</th> 
@@ -198,7 +198,7 @@
                             <button class="btn btn--radius-2 btn--red" type="submit">Register</button>
                         </div>
                     </form>
-
+                    
 					
 				
                 </div>

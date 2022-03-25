@@ -40,7 +40,7 @@ public class Signup extends HttpServlet {
             throws ServletException, IOException {
 
         Part filePart = request.getPart("image");
-                
+
         String firstName = request.getParameter("firstname");
         String lastName = request.getParameter("lastname");
         String email = request.getParameter("email");
@@ -84,7 +84,7 @@ public class Signup extends HttpServlet {
         session.setAttribute("phone", newUser.getPhone());
         response.sendRedirect("home.jsp");
     }
-
+        
     @Override
     public void destroy() {
         // TODO Auto-generated method stub

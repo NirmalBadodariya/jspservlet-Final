@@ -1,9 +1,9 @@
 package dao;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 import daoInterface.UserdaoInterface;
 import model.UserBean;
@@ -15,8 +15,8 @@ public class Userdao extends DBConnection implements UserdaoInterface {
 
             Connection connection = getDBConnection();
             if (connection != null) {
-                PreparedStatement preparedStatement = connection.prepareStatement(insert_users);
-                preparedStatement.setString(1, user.getId() + "");
+                PreparedStatement preparedStatement = connection.prepareStatement(insert_users,
+                        Statement.RETURN_GENERATED_KEYS);
                 preparedStatement.setString(1, user.getFirstName());
                 preparedStatement.setString(2, user.getLastName());
                 preparedStatement.setString(3, user.getEmail());
@@ -28,16 +28,19 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 preparedStatement.setBlob(9, user.getImage());
 
                 preparedStatement.executeUpdate();
-
+                ResultSet res = preparedStatement.getGeneratedKeys();
+                res.next();
+               String a =  res.getString(1);
+                System.out.println("This id: " + res.getString(1));
                 PreparedStatement preparedStatement1 = connection.prepareStatement(insert_addresses);
-                preparedStatement1.setString(1, user.getId() + "");
+                preparedStatement1.setString(1, a);
                 preparedStatement1.setString(2, user.getALine1());
                 preparedStatement1.setString(3, user.getALine2());
                 preparedStatement1.setString(4, user.getCity());
                 preparedStatement1.setInt(5, user.getPin());
                 preparedStatement1.setString(6, user.getState());
                 preparedStatement1.executeUpdate();
-
+                    
             } else {
                 System.out.println("Connection was not Esatablished");
             }

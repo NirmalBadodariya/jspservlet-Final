@@ -41,6 +41,7 @@ public class ForgotPass extends HttpServlet {
         boolean check = Userdao.checkUserDetailsForForgotPass(checkForgotpassDetails);
 
         if (check == true) {
+        
             response.sendRedirect("changePass.jsp");
         } else {
             RequestDispatcher rd = request.getRequestDispatcher("forgotpass.jsp");

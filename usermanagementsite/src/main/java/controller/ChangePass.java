@@ -32,7 +32,7 @@ public class ChangePass extends HttpServlet {
         String newPass = request.getParameter("newPass");
 
         Userdao.setNewPass(newPass);
-
+                
         response.sendRedirect("index.jsp");
 
     }

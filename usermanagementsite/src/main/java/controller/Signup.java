@@ -74,8 +74,7 @@ public class Signup extends HttpServlet {
         newUser.setState(state);
         Userdao.insertUser(newUser);
 
-        System.out.println("id:" + newUser.getId());
-        
+
         HttpSession session = request.getSession();
         session.setAttribute("id", newUser.getId() + "");
         session.setAttribute("email", newUser.getEmail());

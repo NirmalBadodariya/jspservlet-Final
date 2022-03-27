@@ -34,7 +34,7 @@ public class ForgotPass extends HttpServlet {
         System.out.println("in controller");
         String dob = request.getParameter("dob");
         String securityAns = request.getParameter("SecurityAns");
-
+                                                                    
         UserBean checkForgotpassDetails = new UserBean();
         checkForgotpassDetails.setDob(dob);
         checkForgotpassDetails.setSecurityAns(securityAns);

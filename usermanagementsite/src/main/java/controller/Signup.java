@@ -40,7 +40,7 @@ public class Signup extends HttpServlet {
             throws ServletException, IOException {
 
         Part filePart = request.getPart("image");
-
+                
         String firstName = request.getParameter("firstname");
         String lastName = request.getParameter("lastname");
         String email = request.getParameter("email");
@@ -50,7 +50,7 @@ public class Signup extends HttpServlet {
         String pass = request.getParameter("pass");
         InputStream image = filePart.getInputStream();
         String securityAns = request.getParameter("SecurityAns");
-
+                
         String ALine1 = request.getParameter("ALine1");
         String ALine2 = request.getParameter("ALine2");
         String city = request.getParameter("city");
@@ -73,8 +73,8 @@ public class Signup extends HttpServlet {
         newUser.setPin(pin);
         newUser.setState(state);
         Userdao.insertUser(newUser);
-                
 
+                
         HttpSession session = request.getSession();
         session.setAttribute("id", newUser.getId() + "");
         session.setAttribute("email", newUser.getEmail());

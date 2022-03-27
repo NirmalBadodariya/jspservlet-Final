@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import daoInterface.UserdaoInterface;
+import model.ForgotPassBean;
 import model.UserBean;
 
 public class Userdao extends DBConnection implements UserdaoInterface {
@@ -30,10 +31,10 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 preparedStatement.executeUpdate();
                 ResultSet res = preparedStatement.getGeneratedKeys();
                 res.next();
-               String a =  res.getString(1);
+                String id = res.getString(1);
                 System.out.println("This id: " + res.getString(1));
                 PreparedStatement preparedStatement1 = connection.prepareStatement(insert_addresses);
-                preparedStatement1.setString(1, a);
+                preparedStatement1.setString(1, id);
                 preparedStatement1.setString(2, user.getALine1());
                 preparedStatement1.setString(3, user.getALine2());
                 preparedStatement1.setString(4, user.getCity());
@@ -63,11 +64,11 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 while (rs.next()) {
                     if (rs.getString("email").equals(user.getEmail()) && rs.getString("pass").equals(user.getPass())) {
                         check = true;
-                        break;  
+                        break;
                     }
                 }
-                
-            }   
+
+            }
 
         } catch (Exception e) {
             System.out.println(e);
@@ -106,20 +107,21 @@ public class Userdao extends DBConnection implements UserdaoInterface {
         return check;
     }
 
-    public void setNewPass(String newPass) {
+    public void setNewPass(ForgotPassBean forgotPass) {
         try {
 
             Connection connection = getDBConnection();
             if (connection != null) {
                 PreparedStatement preparedStatement = connection.prepareStatement(changePass);
-                preparedStatement.setString(1, newPass);
-
+                preparedStatement.setString(1, forgotPass.getNewPass());
+                preparedStatement.setString(2, forgotPass.getDob());
+                preparedStatement.setString(3, forgotPass.getSecurityAns());
                 preparedStatement.executeUpdate();
 
             } else {
                 System.out.println("Connection was not Established");
             }
-            
+
         } catch (Exception e) {
             System.out.println(e);
         }

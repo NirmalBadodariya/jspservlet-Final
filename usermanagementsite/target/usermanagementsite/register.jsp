@@ -153,13 +153,32 @@
 									</tr>
 								</thead>
 								<tbody class="container">
-								<tr  class="template row">
+								
 									
+
+                                <tr class="template row" style="display: none;">
+                                    <td width="40%">
+                                    <span class="move btn btn-info">↕</span>
+                                    <span class="move-up btn btn-info">↑</span>
+                                    <input type="text" class="move-steps" size="1" value="1" disabled="">
+                                    <span class="move-down btn btn-info">↓</span>
+                                    </td>
+                                    <td width="10%">Location</td>
+                                    <td width="40%">
+                                    <input type="text" name="ALine1[{{row-count-placeholder}}]" class="form-control" disabled="">
+                                    <input type="text" name="ALine2[{{row-count-placeholder}}]" class="form-control" disabled="">
+                                    </td>
+                                    <td width="10%"><span class="remove btn btn-danger">Remove</span></td>
+                                    </tr>
+
+
+
+                                    <tr>
 									<td>
 										<dt>Address Line 1</dt>
-										<dd><input type="text" name="ALine1" class="form-control" placeholder="house no , Apartment"/></dd><br>
+										<dd><input type="text" name="ALine1[0]" class="form-control" placeholder="house no , Apartment"/></dd><br>
 										<dt>Address Line 2</dt>
-										<dd><input type="text" name="ALine2" class="form-control" placeholder="Street , Nearby Landmark" /></dd><br>
+										<dd><input type="text" name="ALine2[0]" class="form-control" placeholder="Street , Nearby Landmark" /></dd><br>
 										<dt>City</dt>
 										<dd>
 											<select name="city" id="cityselect">
@@ -173,7 +192,7 @@
 										<dt>Pincode</dt>
 										<dd><input type="number" name="pin" class="form-control" placeholder="pincode" /></dd><br>
 										<dt>State</dt>
-										<dd>
+										<dd>    
 											<select name="state" id="stateselect">
 												<option>Gujrat</option>
 												<option>Delhi</option>
@@ -181,7 +200,7 @@
 												<option>Rajasthan</option>
 												<option>Bihar</option>
 												<option>Goa</option>
-												
+                                                    
 										</select></dd><br>
 										
 									</td>

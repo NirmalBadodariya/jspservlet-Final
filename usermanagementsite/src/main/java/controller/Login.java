@@ -42,12 +42,10 @@ public class Login extends HttpServlet {
         UserBean newUser = new UserBean();
         newUser.setEmail(email);
         newUser.setPass(pass);
-        // HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
+        session.setAttribute("email", email);
 
         boolean check = Userdao.checkUser(newUser);
-
-        
-        System.out.println("checkincncccccccccc:      " + check);
         if (check == true) {
             response.sendRedirect("home.jsp");
 
@@ -56,7 +54,7 @@ public class Login extends HttpServlet {
             rd.include(request, response);
             out.print("Not A Valid Input");
         }
-            
+
     }
 
     @Override

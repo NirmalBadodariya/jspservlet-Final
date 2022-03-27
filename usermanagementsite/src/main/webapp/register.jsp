@@ -173,7 +173,7 @@
 										<dt>Pincode</dt>
 										<dd><input type="number" name="pin" class="form-control" placeholder="pincode" /></dd><br>
 										<dt>State</dt>
-										<dd>
+										<dd>    
 											<select name="state" id="stateselect">
 												<option>Gujrat</option>
 												<option>Delhi</option>
@@ -181,7 +181,7 @@
 												<option>Rajasthan</option>
 												<option>Bihar</option>
 												<option>Goa</option>
-												
+                                                    
 										</select></dd><br>
 										
 									</td>

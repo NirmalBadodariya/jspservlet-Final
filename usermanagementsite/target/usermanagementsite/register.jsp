@@ -194,9 +194,16 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label class="control-label" for="city_0">City</label>
-                                            <input type="text" id="city_0" class="form-control" name="Address[0][city]" maxlength="64">
-                                            <p class="help-block help-block-error"></p>
+                                            <label  for="city_0">city</label>
+                                            <select class="form-control" name="Address[0][city]">
+												<option value="Ahmedabad">Ahmedabad</option>
+												<option value="Delhi">Delhi</option>
+												<option value="Mumbai">Mumbai</option>
+												<option value="Jaipur">Jaipur</option>
+												<option value="banglore">banglore</option>
+												
+										</select>
+        
                                         </div>
                                     </div>
                                     
@@ -204,14 +211,14 @@
                                         <div class="form-group">
                                             <label  for="state_0">State</label>
                                             <select class="form-control" name="Address[0][state]">
-												<option value="ahmedabad">Ahmedabad</option>
-												<option>Delhi</option>
-												<option>mumbai</option>
-												<option>Chennai</option>
-												<option>jaipur</option>
+												<option value="gujrat">Gujrat</option>
+												<option value="MP">MP</option>
+												<option value="maharastra">maharastra</option>
+												<option value="Delhi">Delhi</option>
+												<option value="Rajasthan">Rajasthan</option>
 												
 										</select>
-        
+                                                
                                         </div>
                                     </div>
 

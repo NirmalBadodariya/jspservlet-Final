@@ -13,7 +13,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
 
     public String insertUser(UserBean user) {
         try {
-
+            
             Connection connection = getDBConnection();
             if (connection != null) {
                 // adding data to users table.
@@ -28,7 +28,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 preparedStatement.setString(7, user.getPass());
                 preparedStatement.setString(8, user.getSecurityAns());
                 preparedStatement.setBlob(9, user.getImage());
-                
+
                 preparedStatement.executeUpdate();
                 ResultSet res = preparedStatement.getGeneratedKeys();
                 res.next();
@@ -66,19 +66,30 @@ public class Userdao extends DBConnection implements UserdaoInterface {
         return null;
     }
 
-    public boolean checkUser(UserBean user) {
-        boolean check = false;
+    public int checkUser(UserBean user) {
+        int usertype = 0;
         try {
             Connection connection = getDBConnection();
             if (connection != null) {
 
                 PreparedStatement preparedStatement = connection.prepareStatement(login_credentials);
-
+                
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
-                    if (rs.getString("email").equals(user.getEmail()) && rs.getString("pass").equals(user.getPass())) {
-                        check = true;
+                    // System.out.println("u_id: " + rs.getString(3));
+                    // System.out.println("role: " + rs.getString(4));
+                    // System.out.println("mail: " + rs.getString(1));
+                    // System.out.println("pass: " + rs.getString(2));
+                    if (rs.getString("email").equals(user.getEmail()) && rs.getString("pass").equals(user.getPass())
+                            && rs.getString(4).equals("1")) {
+                        usertype = 1;
+                        
+                        break;
+                    } else if (rs.getString("email").equals(user.getEmail())
+                            && rs.getString("pass").equals(user.getPass()) && rs.getString(4).equals("2")) {
+                        usertype = 2;
+                        
                         break;
                     }
                 }
@@ -88,8 +99,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
         } catch (Exception e) {
             System.out.println(e);
         }
-
-        return check;
+        return usertype;
 
     }
 

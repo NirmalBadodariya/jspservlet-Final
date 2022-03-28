@@ -84,7 +84,7 @@ public class Signup extends HttpServlet {
         }
         newUser.setAddresses(addresses);
         // String id = Userdao.insertUser(newUser);
-        
+
         String id  = signupService.insertUser(newUser);
         
         if (id != null) {
@@ -98,7 +98,7 @@ public class Signup extends HttpServlet {
             response.sendRedirect("home.jsp");
         }
     }
-
+    
     @Override
     public void destroy() {
         // TODO Auto-generated method stub

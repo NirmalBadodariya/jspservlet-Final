@@ -6,7 +6,7 @@ public interface UserdaoInterface {
     public static final String insert_users = "INSERT INTO users"
             + "  (firstname,lastname,email,phone,gender,dob,pass,security_ans,user_profile) VALUES "
             + " (?, ?, ?, ?, ?,?,?,?,?);";
-    public static final String login_credentials = "select * from users";
+    public static final String login_credentials = "select users.email , users.pass , assignned_roles.u_id , assignned_roles.role FROM users INNER JOIN assignned_roles ON users.id = assignned_roles.u_id;";
         
     public static final String insert_addresses = "INSERT INTO user_addresses"
             + "(user_id,address_line1,address_line2,city,pincode,state) VALUES" + " (?, ?, ?, ?, ?,?);";
@@ -18,5 +18,5 @@ public interface UserdaoInterface {
     
     public String insertUser(UserBean user);
 
-    public boolean checkUser(UserBean user);
+    public int checkUser(UserBean user);
 }

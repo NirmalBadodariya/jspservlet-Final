@@ -23,6 +23,7 @@ public class Login extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Userdao Userdao;
     private LoginService loginService;
+
     public void init() {
         Userdao = new dao.Userdao();
 
@@ -35,7 +36,7 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         doPost(request, response);
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -50,10 +51,13 @@ public class Login extends HttpServlet {
         session.setAttribute("email", email);
 
         // boolean check = Userdao.checkUser(newUser);
-        boolean check = loginService.checkUser(newUser);
-        if (check == true) {
+        int usertype = loginService.checkUser(newUser);
+        System.out.println("usertyoppe" + usertype);
+        if (usertype == 1) {
             response.sendRedirect("home.jsp");
 
+        } else if (usertype == 2) {
+            response.sendRedirect("adminHome.jsp");
         } else {
             RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
             rd.include(request, response);

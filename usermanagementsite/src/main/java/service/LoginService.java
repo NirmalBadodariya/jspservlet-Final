@@ -6,11 +6,11 @@ import serviceinterface.SignupServiceInterface;
 
 public class LoginService implements LoginServiceInterface{
     
-    public boolean checkUser(UserBean user) {
+    public int checkUser(UserBean user) {
         final dao.Userdao Userdao;
         Userdao = new dao.Userdao();
-       boolean check =  Userdao.checkUser(user);
-        return check;
+       int usertype =  Userdao.checkUser(user);
+        return usertype;
     }
     
 }

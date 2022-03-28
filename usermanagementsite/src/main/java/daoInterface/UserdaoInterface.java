@@ -13,8 +13,10 @@ public interface UserdaoInterface {
 
     public static final String checkforgotPassDetails = "select * from users";
     public static final String changePass = "update users set pass=? where dob=? and security_ans=?";
-
-    public void insertUser(UserBean user);
+    public static final String setusertype = "INSERT INTO assignned_roles"+
+                                       "(u_id,role) VALUES"+"(?,?);";
+    
+    public String insertUser(UserBean user);
 
     public boolean checkUser(UserBean user);
 }

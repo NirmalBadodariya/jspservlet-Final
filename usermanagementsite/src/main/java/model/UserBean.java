@@ -1,6 +1,7 @@
 package model;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class UserBean {
     private int id;
@@ -13,52 +14,7 @@ public class UserBean {
     private String pass;
     private String SecurityAns;
     private InputStream image;
-    private String ALine1;
-    private String ALine2;
-
-    public String getALine1() {
-        return ALine1;
-    }
-
-    public void setALine1(String aLine1) {
-        ALine1 = aLine1;
-    }
-
-    public String getALine2() {
-        return ALine2;
-    }
-
-    public void setALine2(String aLine2) {
-        ALine2 = aLine2;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public int getPin() {
-        return pin;
-    }
-
-    public void setPin(int pin) {
-        this.pin = pin;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    private String city;
-    private int pin;
-    private String state;
+    private ArrayList<AddressBean> addresses ;
 
     public InputStream getImage() {
         return image;
@@ -78,6 +34,14 @@ public class UserBean {
 
     public String getPass() {
         return pass;
+    }
+
+    public ArrayList<AddressBean> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(ArrayList<AddressBean> addresses) {
+        this.addresses = addresses;
     }
 
     public void setPass(String pass) {

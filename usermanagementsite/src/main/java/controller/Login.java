@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.UserBean;
+import service.LoginService;
 import dao.Userdao;
 
 /**
@@ -21,9 +22,12 @@ import dao.Userdao;
 public class Login extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Userdao Userdao;
-
+    private LoginService loginService;
     public void init() {
-        Userdao = new Userdao();
+        Userdao = new dao.Userdao();
+
+        loginService = new LoginService();
+
     }
 
     @Override
@@ -31,7 +35,7 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         doPost(request, response);
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -45,7 +49,8 @@ public class Login extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("email", email);
 
-        boolean check = Userdao.checkUser(newUser);
+        // boolean check = Userdao.checkUser(newUser);
+        boolean check = loginService.checkUser(newUser);
         if (check == true) {
             response.sendRedirect("home.jsp");
 

@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -13,7 +14,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import model.AddressBean;
 import model.UserBean;
+import service.SignupService;
 
 /**
  * Servlet implementation class signup
@@ -24,23 +27,26 @@ import model.UserBean;
 public class Signup extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private dao.Userdao Userdao;
-
+    private SignupService signupService;
     public void init() {
         Userdao = new dao.Userdao();
+
+        signupService = new SignupService();
+
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doPost(request, response);
-    }
-
+    }   
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        System.out.println("signup called");
         Part filePart = request.getPart("image");
-                
         String firstName = request.getParameter("firstname");
         String lastName = request.getParameter("lastname");
         String email = request.getParameter("email");
@@ -50,12 +56,6 @@ public class Signup extends HttpServlet {
         String pass = request.getParameter("pass");
         InputStream image = filePart.getInputStream();
         String securityAns = request.getParameter("SecurityAns");
-                
-        String ALine1 = request.getParameter("ALine1");
-        String ALine2 = request.getParameter("ALine2");
-        String city = request.getParameter("city");
-        int pin = Integer.parseInt(request.getParameter("pin"));
-        String state = request.getParameter("state");
 
         UserBean newUser = new UserBean();
         newUser.setFirstName(firstName);
@@ -67,24 +67,38 @@ public class Signup extends HttpServlet {
         newUser.setPass(pass);
         newUser.setImage(image);
         newUser.setSecurityAns(securityAns);
-        newUser.setALine1(ALine1);
-        newUser.setALine2(ALine2);
-        newUser.setCity(city);
-        newUser.setPin(pin);
-        newUser.setState(state);
-        Userdao.insertUser(newUser);
-
-                
-        HttpSession session = request.getSession();
-        session.setAttribute("id", newUser.getId() + "");
-        session.setAttribute("email", newUser.getEmail());
-        session.setAttribute("firstName", newUser.getFirstName());
-        session.setAttribute("lastName", newUser.getLastName());
-        session.setAttribute("pass", newUser.getPass());
-        session.setAttribute("phone", newUser.getPhone());
-        response.sendRedirect("home.jsp");
-    }
+        int i = 0;
+        ArrayList<AddressBean> addresses = new ArrayList<>();
+        while (true) {
+            String ALine1 = request.getParameter("Address[" + i + "][address_line1]");
+            if (ALine1 == null) {
+                break;
+            }
+            String ALine2 = request.getParameter("Address[" + i + "][address_line2]");
+            String city = request.getParameter("Address[" + i + "][city]");
+            int pin = Integer.parseInt(request.getParameter("Address[" + i +
+                    "][pincode]"));
+            String state = request.getParameter("Address[" + i + "][state]");
+            i++;
+            addresses.add(new AddressBean(ALine1, ALine2, city, state, pin));
+        }
+        newUser.setAddresses(addresses);
+        // String id = Userdao.insertUser(newUser);
         
+        String id  = signupService.insertUser(newUser);
+        
+        if (id != null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("id", id);
+            session.setAttribute("email", newUser.getEmail());
+            session.setAttribute("firstName", newUser.getFirstName());
+            session.setAttribute("lastName", newUser.getLastName());
+            session.setAttribute("pass", newUser.getPass());
+            session.setAttribute("phone", newUser.getPhone());
+            response.sendRedirect("home.jsp");
+        }
+    }
+
     @Override
     public void destroy() {
         // TODO Auto-generated method stub

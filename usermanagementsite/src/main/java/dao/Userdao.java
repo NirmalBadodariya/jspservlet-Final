@@ -11,11 +11,12 @@ import model.UserBean;
 
 public class Userdao extends DBConnection implements UserdaoInterface {
 
-    public void insertUser(UserBean user) {
+    public String insertUser(UserBean user) {
         try {
 
             Connection connection = getDBConnection();
             if (connection != null) {
+                // adding data to users table.
                 PreparedStatement preparedStatement = connection.prepareStatement(insert_users,
                         Statement.RETURN_GENERATED_KEYS);
                 preparedStatement.setString(1, user.getFirstName());
@@ -27,20 +28,33 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 preparedStatement.setString(7, user.getPass());
                 preparedStatement.setString(8, user.getSecurityAns());
                 preparedStatement.setBlob(9, user.getImage());
-
+                
                 preparedStatement.executeUpdate();
                 ResultSet res = preparedStatement.getGeneratedKeys();
                 res.next();
                 String id = res.getString(1);
-                System.out.println("This id: " + res.getString(1));
-                PreparedStatement preparedStatement1 = connection.prepareStatement(insert_addresses);
-                preparedStatement1.setString(1, id);
-                preparedStatement1.setString(2, user.getALine1());
-                preparedStatement1.setString(3, user.getALine2());
-                preparedStatement1.setString(4, user.getCity());
-                preparedStatement1.setInt(5, user.getPin());
-                preparedStatement1.setString(6, user.getState());
-                preparedStatement1.executeUpdate();
+
+                // storing usertype in roles table.
+                PreparedStatement ps = connection.prepareStatement(setusertype);
+                ps.setString(1, id);
+                ps.setInt(2, 1);
+                ps.executeUpdate();
+
+                // adding data to addresses table
+                for (int i = 0; i < user.getAddresses().size(); i++) {
+
+                    System.out.println("This id: " + res.getString(1));
+                    PreparedStatement preparedStatement1 = connection.prepareStatement(insert_addresses);
+                    preparedStatement1.setString(1, id);
+
+                    preparedStatement1.setString(2, user.getAddresses().get(i).getAddressLine1());
+                    preparedStatement1.setString(3, user.getAddresses().get(i).getAddressLine2());
+                    preparedStatement1.setString(4, user.getAddresses().get(i).getCity());
+                    preparedStatement1.setInt(5, user.getAddresses().get(i).getPincode());
+                    preparedStatement1.setString(6, user.getAddresses().get(i).getState());
+                    preparedStatement1.executeUpdate();
+                }
+                return id;
 
             } else {
                 System.out.println("Connection was not Esatablished");
@@ -49,6 +63,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
         } catch (Exception e) {
             System.out.println(e);
         }
+        return null;
     }
 
     public boolean checkUser(UserBean user) {

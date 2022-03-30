@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import java.io.PrintWriter;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,13 +23,14 @@ import dao.Userdao;
  */
 @WebServlet("/Login")
 public class Login extends HttpServlet {
+    Logger log = Logger.getLogger(Login.class.getName());
     private static final long serialVersionUID = 1L;
     private Userdao Userdao;
     private LoginService loginService;
 
     public void init() {
-        Userdao = new dao.Userdao();
-
+        
+        BasicConfigurator.configure();
         loginService = new LoginService();
 
     }
@@ -42,6 +46,7 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         String email = request.getParameter("email");
+        // log.info("csdvsdv");
         String pass = request.getParameter("pass");
 
         UserBean newUser = new UserBean();
@@ -50,9 +55,8 @@ public class Login extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("email", email);
 
-        // boolean check = Userdao.checkUser(newUser);
         int usertype = loginService.checkUser(newUser);
-        System.out.println("usertyoppe" + usertype);
+
         if (usertype == 1) {
             response.sendRedirect("home.jsp");
 
@@ -64,8 +68,8 @@ public class Login extends HttpServlet {
             out.print("Not A Valid Input");
         }
 
-    }
-
+    }   
+    
     @Override
     public void destroy() {
         // TODO Auto-generated method stub

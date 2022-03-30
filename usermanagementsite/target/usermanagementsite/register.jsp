@@ -169,7 +169,7 @@
 
             <form action="Signup" method="post" role="form" autocomplete="off">
 
-                
+
                 <div id="main-container">
                     <div class="panel card container-item">
                         <div class="panel-body">
@@ -177,6 +177,11 @@
 
                                 <div class="row">
                                     <div class="col-sm-6">
+                                        <div class="form-group d-none">
+                                            <label class="control-label" for="address_id_0">Address line 1</label>
+                                            <input type="text" id="address_id_0" class="form-control" name="Address[0][address_id]">
+                                            <p class="help-block help-block-error"></p>
+                                        </div>
                                         <div class="form-group">
                                             <label class="control-label" for="address_line_one_0">Address line 1</label>
                                             <input type="text" id="address_line_one_0" class="form-control" name="Address[0][address_line1]" maxlength="255">
@@ -194,8 +199,8 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label  for="city_0">city</label>
-                                            <select class="form-control" name="Address[0][city]">
+                                            <label for="city_0">city</label>
+                                            <select id="city_0" class="form-control" name="Address[0][city]">
 												<option value="Ahmedabad">Ahmedabad</option>
 												<option value="Delhi">Delhi</option>
 												<option value="Mumbai">Mumbai</option>
@@ -203,14 +208,14 @@
 												<option value="banglore">banglore</option>
 												
 										</select>
-        
+
                                         </div>
                                     </div>
                                     
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label  for="state_0">State</label>
-                                            <select class="form-control" name="Address[0][state]">
+                                            <label for="state_0">State</label>
+                                            <select id="state_0" class="form-control" name="Address[0][state]">
 												<option value="gujrat">Gujrat</option>
 												<option value="MP">MP</option>
 												<option value="maharastra">maharastra</option>
@@ -221,7 +226,7 @@
                                                 
                                         </div>
                                     </div>
-
+                                                        
                                 </div>
                                 <div class="col-sm-6">
                                         <div class="form-group">

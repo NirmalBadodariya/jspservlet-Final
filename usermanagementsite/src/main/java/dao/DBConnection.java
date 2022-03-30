@@ -10,7 +10,7 @@ public class DBConnection {
     public static final String dbURL = "jdbc:mysql://localhost:3306/users_management";
     public static final String dbUname = "root";
     public static final String dbPass = "nirmal15";
-
+    
     protected DBConnection() {
 
     }

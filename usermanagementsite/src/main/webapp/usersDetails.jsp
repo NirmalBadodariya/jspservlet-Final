@@ -4,7 +4,6 @@
  <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix = "sql"%> 
 <%@ page isELIgnored="false" %>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,6 +42,8 @@
                 <td><c:out value = "${row.email}"/></td>
                 <td><button class="btn btn-success">Edit</button></td>
                 <td><button class="btn btn-danger">Delete</button></td>
+                    
+
             </tr>
         </c:forEach>
         </tbody>

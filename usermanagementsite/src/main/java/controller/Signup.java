@@ -45,7 +45,7 @@ public class Signup extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        System.out.println("signup called");
+        
         Part filePart = request.getPart("image");
         String firstName = request.getParameter("firstname");
         String lastName = request.getParameter("lastname");

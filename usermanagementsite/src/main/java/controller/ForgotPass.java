@@ -31,7 +31,6 @@ public class ForgotPass extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
-        System.out.println("in controller");
         String dob = request.getParameter("dob");
         String securityAns = request.getParameter("SecurityAns");
                                                                     

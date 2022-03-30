@@ -15,7 +15,7 @@ public class UserBean {
     private String SecurityAns;
     private InputStream image;
     private ArrayList<AddressBean> addresses ;
-
+    
     public InputStream getImage() {
         return image;
     }

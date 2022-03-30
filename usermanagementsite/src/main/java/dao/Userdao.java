@@ -4,13 +4,25 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 import daoInterface.UserdaoInterface;
 import model.ForgotPassBean;
 import model.UserBean;
 
 public class Userdao extends DBConnection implements UserdaoInterface {
+    Logger log = Logger.getLogger(Userdao.class.getName());
 
+
+    public void init() {
+        
+        BasicConfigurator.configure();
+        
+
+    }
     public String insertUser(UserBean user) {
         try {
             
@@ -43,7 +55,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 // adding data to addresses table
                 for (int i = 0; i < user.getAddresses().size(); i++) {
 
-                    System.out.println("This id: " + res.getString(1));
+                        
                     PreparedStatement preparedStatement1 = connection.prepareStatement(insert_addresses);
                     preparedStatement1.setString(1, id);
 
@@ -57,15 +69,16 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 return id;
 
             } else {
-                System.out.println("Connection was not Esatablished");
+               log.error("Connection Not Established");
             }
 
         } catch (Exception e) {
-            System.out.println(e);
+            log.error("Exception:"+e);
         }
         return null;
     }
 
+    // Checking userdata for logging in.
     public int checkUser(UserBean user) {
         int usertype = 0;
         try {
@@ -75,19 +88,18 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 PreparedStatement preparedStatement = connection.prepareStatement(login_credentials);
                 
                 ResultSet rs = preparedStatement.executeQuery();
-
-                while (rs.next()) {
-                    // System.out.println("u_id: " + rs.getString(3));
-                    // System.out.println("role: " + rs.getString(4));
-                    // System.out.println("mail: " + rs.getString(1));
-                    // System.out.println("pass: " + rs.getString(2));
+                // loop through database to find matching email and pass
+                while (rs.next()) { 
+                    
                     if (rs.getString("email").equals(user.getEmail()) && rs.getString("pass").equals(user.getPass())
                             && rs.getString(4).equals("1")) {
+                                // usertype defines type of user 1 for user.
                         usertype = 1;
                         
                         break;
                     } else if (rs.getString("email").equals(user.getEmail())
                             && rs.getString("pass").equals(user.getPass()) && rs.getString(4).equals("2")) {
+                                // usertype defines type of user 2 for admin.
                         usertype = 2;
                         
                         break;
@@ -97,12 +109,14 @@ public class Userdao extends DBConnection implements UserdaoInterface {
             }
 
         } catch (Exception e) {
-            System.out.println(e);
+            log.error("Exception:"+e);
         }
         return usertype;
 
     }
 
+    // again checking details of users if he has forgot his pass 
+    // details we are checking here are DOB and security ans from user into database
     public boolean checkUserDetailsForForgotPass(UserBean checkForgotpassDetails) {
         boolean check = false;
         try {
@@ -123,18 +137,18 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 }
 
             } else {
-                System.out.println("Connection was not Esatablished");
+                log.error("Connection Not Established");
             }
 
         } catch (Exception e) {
-            System.out.println(e);
+            log.error("Exception:"+e);
         }
         return check;
     }
-
+    // updating password of user if he has forgotten it.
     public void setNewPass(ForgotPassBean forgotPass) {
         try {
-
+            
             Connection connection = getDBConnection();
             if (connection != null) {
                 PreparedStatement preparedStatement = connection.prepareStatement(changePass);
@@ -144,11 +158,13 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 preparedStatement.executeUpdate();
 
             } else {
-                System.out.println("Connection was not Established");
+                log.error("Connection Not Established");
             }
 
         } catch (Exception e) {
-            System.out.println(e);
+            log.error("Exception :"+e);
+            
         }
     }
+    
 }

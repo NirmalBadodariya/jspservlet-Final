@@ -5,9 +5,9 @@ import serviceinterface.LoginServiceInterface;
 import serviceinterface.SignupServiceInterface;
 
 public class LoginService implements LoginServiceInterface{
+    private dao.Userdao Userdao;
     
     public int checkUser(UserBean user) {
-        final dao.Userdao Userdao;
         Userdao = new dao.Userdao();
        int usertype =  Userdao.checkUser(user);
         return usertype;

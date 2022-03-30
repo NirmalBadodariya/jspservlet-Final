@@ -39,7 +39,7 @@ public class AdminDao extends adminDBConnection implements AdminDaoInterface {
                     user.setEmail(rs.getString(4));
                     userDetails.add(user);
                 }
-
+                
                 return userDetails;
             } else {
                 log.error("Connection is null");
@@ -62,7 +62,7 @@ public class AdminDao extends adminDBConnection implements AdminDaoInterface {
                 PreparedStatement preparedStatement = connection.prepareStatement(deleteUserQUery1);
                 System.out.println(deleteUserQUery1);
                 preparedStatement.executeUpdate();
-                
+
             } else {
                 log.error("Connection is null");
             }

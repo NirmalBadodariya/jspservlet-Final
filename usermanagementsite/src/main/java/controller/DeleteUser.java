@@ -36,6 +36,6 @@ public class DeleteUser extends HttpServlet {
         int userId = Integer.parseInt(request.getParameter("userId"));
 
         deleteUserService.deleteUser(userId);
-        System.out.println(userId);
+        
     }
 }

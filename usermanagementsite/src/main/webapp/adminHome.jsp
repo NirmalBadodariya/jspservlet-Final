@@ -49,14 +49,17 @@ $(document).ready(function() {
 
 });
 function DeleteUser(userId) {
-            
+
 			$.post("DeleteUser", {
 				"userId" : userId
 			}, function() {
 				window.location.reload();
-			});
+                ('#showUserDetails').click();
+			}
+);
+     };     
 
-		}
+		
 </script>
 
 </head>
@@ -66,8 +69,8 @@ function DeleteUser(userId) {
 <table cellspacing="0" id="showData"> 
     <thead> 
     <tr>
+        <th style="text-align:start; width:33.3% !important;">ID</th> 
         <th style="text-align:start; width:33.3% !important;">Name</th> 
-        <th style="text-align:start; width:33.3% !important;">Id</th> 
         <th style="text-align:start; width:33.3% !important;">Email</th> 
         <th style="text-align:start; width:33.3% !important;">EDIT</th> 
         <th style="text-align:start; width:33.3% !important;">DELETE</th> 

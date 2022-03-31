@@ -29,7 +29,7 @@ public class Login extends HttpServlet {
     private LoginService loginService;
 
     public void init() {
-        
+
         BasicConfigurator.configure();
         loginService = new LoginService();
 
@@ -63,13 +63,13 @@ public class Login extends HttpServlet {
         } else if (usertype == 2) {
             response.sendRedirect("adminHome.jsp");
         } else {
+            request.setAttribute("error","Invalid email or Password");
             RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
             rd.include(request, response);
-            out.print("Not A Valid Input");
         }
 
-    }   
-    
+    }
+
     @Override
     public void destroy() {
         // TODO Auto-generated method stub

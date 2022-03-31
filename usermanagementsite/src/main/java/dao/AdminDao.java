@@ -29,6 +29,7 @@ public class AdminDao extends adminDBConnection implements AdminDaoInterface {
             if (connection != null) {
 
                 PreparedStatement preparedStatement = connection.prepareStatement(userDetailsQuery);
+                
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
@@ -36,7 +37,7 @@ public class AdminDao extends adminDBConnection implements AdminDaoInterface {
                     UserBean user = new UserBean();
                     user.setId(rs.getInt(1));
                     user.setFirstName(rs.getString(2));
-                    user.setEmail(rs.getString(4));
+                    user.setEmail(rs.getString(3));
                     userDetails.add(user);
                 }
                 

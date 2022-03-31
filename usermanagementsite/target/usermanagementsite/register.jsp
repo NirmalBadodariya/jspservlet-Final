@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page isELIgnored = "false" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -55,20 +58,23 @@
                     <h2 class="title">User Registration form</h2>
                 </div>
                 <div class="card-body">
-                    <form action="Signup" method="POST" enctype="multipart/form-data">
+                    <form action="Signup" method="POST" enctype="multipart/form-data" onsubmit="return validateform()">
                         <div class="form-row m-b-55">
                             <div class="name">Name</div>
                             <div class="value">
                                 <div class="row row-space">
                                     <div class="col-2">
                                         <div class="input-group-desc">
-                                            <input class="input--style-5" type="text" name="firstname">
+                                            <input class="input--style-5" type="text" name="firstname" id="firstname">
                                             <label class="label--desc">first name</label>
                                         </div>
                                     </div>
+                                    <c:if test="${firstname != null}">
+                                         <c:out value="${firstname}" />
+                                    </c:if>
                                     <div class="col-2">
                                         <div class="input-group-desc">
-                                            <input class="input--style-5" type="text" name="lastname">
+                                            <input class="input--style-5" type="text" name="lastname"  id="lastname">
                                             <label class="label--desc">last name</label>
                                         </div>
                                     </div>
@@ -80,7 +86,7 @@
                             <div class="name">Email</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="email" name="email">
+                                    <input class="input--style-5" type="email" id="email" name="email">
                                 </div>
                             </div>
                         </div>
@@ -91,7 +97,7 @@
                                     
                                     <div class="col-9">
                                         <div class="input-group-desc">
-                                            <input class="input--style-5" type="number" name="phone">
+                                            <input class="input--style-5" type="number" name="phone" id="phone">
                                             <label class="label--desc">Phone Number</label>
                                         </div>
                                     </div>
@@ -101,8 +107,8 @@
                         
                         <div class="form-row p-t-20">
                             <div class="name">Gender</div>
-                            Male:<input type="radio" name="gender" value="M">
-                           Female:<input type="radio" name="gender" value="F">
+                            Male:<input type="radio" name="gender" value="M" id="Gmale">
+                           Female:<input type="radio" name="gender" value="F" id="Gfemale">
                         </div>
                         <div class="form-row m-b-55">
                             <div class="name">DOB</div>
@@ -110,7 +116,7 @@
                                 <div class="row row-refine">
                                     <div class="col-9">
                                         <div class="input-group-desc">
-                                            <input class="input--style-5" type="date" name="dob">
+                                            <input class="input--style-5" type="date" name="dob" id="dob">
                                             
                                         </div>
                                     </div>
@@ -124,7 +130,7 @@
                                 <div class="row row-refine">
                                     <div class="col-9">
                                         <div class="input-group-desc">
-                                            <input class="input--style-5" type="password" name="pass">
+                                            <input class="input--style-5" type="password" name="pass" id="pass">
                                             
                                         </div>
                                     </div>
@@ -154,21 +160,21 @@
                                     <div class="col-9">
                                         <div class="input-group-desc">
                                             <p>What was your first school name?</p>
-                                            <input class="input--style-5" type="text" name="SecurityAns">
+                                            <input class="input--style-5" type="text" name="SecurityAns" id="securityans">
                                             
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
 						<div class="container" style="margin:150px auto">
     <div class="margin-t-md">
         <div class="customer-form">
             
 
-            <form action="Signup" method="post" role="form" autocomplete="off">
-
+            <form action="Signup" method="post" role="form" autocomplete="off" >
+            
 
                 <div id="main-container">
                     <div class="panel card container-item">
@@ -230,7 +236,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                         <div class="form-group">
-                                        <input class="form-control" type="number" name="Address[0][pincode]" placeholder="pincode">
+                                        <input class="form-control" id="pincode_0" type="number" name="Address[0][pincode]" placeholder="pincode">
                                         </div>
                                         </div>
 
@@ -247,26 +253,19 @@
                 </div>
                 <div class="card">
                     <div>
-                        <a class="btn btn-success btn-sm" id="add-more" href="javascript:;" role="button"><i class="fa fa-plus"></i> Add more address</a>
-                        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                        <a class="btn btn-success btn-sm" id="add-more" onclick="return checkAddress()" href="javascript:;" role="button"><i class="fa fa-plus"></i> Add more address</a>
+                        <input type="submit" class="btn btn-primary btn-sm" value="Submit">
                     </div>
 
-
                 </div>
+                
             </form>
         </div>
     </div>
 </div>
 
-
-
-
-
 					<br><br>
 				</th> 
-                        <div>
-                            <button class="btn btn--radius-2 btn--red" type="submit">Register</button>
-                        </div>
                     </form>
                     
 					
@@ -290,6 +289,10 @@
 <script src="https://cdn.ckeditor.com/4.5.1/standard/ckeditor.js"></script>
 <script src="./js/cloneData.js" type="text/javascript"></script>
 <script>
+
+
+
+
     $('a#add-more').cloneData({
         mainContainerId: 'main-container', // Main container Should be ID
         cloneContainer: 'container-item', // Which you want to clone
@@ -368,6 +371,92 @@ try {
   console.log(error);
 }
 </script>
+<%-- Validating form with the function --%>
+<script>
+		function validateform() {
+			
+			var fname = $("#firstname").val();
+            var lname = $("#lastname").val();
+            var email = $("#email").val();
+            var phone = $("#phone").val();
+           
+            var dob = $("#dob").val();
+            var pass = $("#pass").val();
+            var securityans = $("#securityans").val();
+            var genderselect = $("input[type = 'radio']:checked"); 
+            var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            var passcheck = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+            
+            
+
+            var addressLineOne = $("#address_line_one_0").val();
+            var addressLineTwo = $("#address_line_two_0").val();
+            var pincode = $("#pincode_0").val();
+            
+
+			if (fname != "" && lname != "" && email != "" && phone !="" && genderselect.length > 0 && dob != "" && pass != "" && securityans != "") {
+                if (fname.length>10 || lname.length>10) {
+                    alert("Too long name");
+                    return false;
+                }
+                else if(!filter.test(email)){
+                    alert("Not a valid email");
+                    return false;
+                }
+                else if(phone.length!=10){
+                    alert("phone number must have 10 numbers");
+                    return false;
+                }
+                else if(!passcheck.test(pass)){
+                    alert("Password must contain at least 1 capital letter,\n\n1 small letter, 1 number and 6 letters");
+                    return false;
+                }
+                        
+
+                
+                else if(addressLineOne == "" || addressLineTwo == "" || pincode == ""){
+                    alert("no address filed should be empty");
+                    return false;
+                }
+                else{
+                    
+                    return true;
+                }
+
+			} else {
+				alert("No Fields should be empty");
+				return false;
+			}
+            
+		}
+        var count =1;
+	</script>
+    <script>
+    
+            $('body').on('click', '#add-more', function () {
+                count++;
+                
+            });
+    function checkAddress() {
+        alert(count);
+        for(int i=0;i<count;i++){
+            
+
+            var addressLineOne = $("#address_line_one_"+i).val();
+            var addressLineTwo = $("#address_line_two_"+i).val();
+            var pincode = $("#pincode_"+i).val();
+             if(addressLineOne == "" || addressLineTwo == "" || pincode == ""){
+                    alert("no address filed should be empty");
+                    return false;
+                }
+                else{
+                    return true;
+                }
+        }
+        
+        return false;
+    }
+    </script>
 </body>
 
 </html>

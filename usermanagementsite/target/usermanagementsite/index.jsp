@@ -1,4 +1,6 @@
-<%-- <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> --%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page isELIgnored = "false" %>
 <!doctype html>
 <html lang="en">
   <head>
@@ -36,9 +38,19 @@
 	            <div class="form-group d-flex">
 	              <input type="password" class="form-control rounded-left" placeholder="Password" required name="pass">
 	            </div>
+				<c:if test="${error != null}">
+						<c:out value="${error}" />
+				</c:if>
 	            <div class="form-group">
 	            	<button type="submit" class="form-control btn btn-primary rounded submit px-3">Login</button>
 	            </div>
+				
+					
+					<%-- <%
+							String login_msg=(String)request.getAttribute("error");  
+							if(login_msg!=null)
+							out.println("<font color=red size=4px>"+login_msg+"</font>");
+					%> --%>
 				<div class="form-group d-md-flex">
 	            	<div class="w-50">
 	            		<div class="w-50 text-md-left">
@@ -56,8 +68,6 @@
 		</div>
 	</section>
 
-	<!-- <script src="js/jquery.min.js"></script> -->
-  <!-- <script src="js/bootstrap.min.js"></script> -->
 
 	</body>
 </html>

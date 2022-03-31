@@ -56,7 +56,13 @@ public class Signup extends HttpServlet {
         String pass = request.getParameter("pass");
         InputStream image = filePart.getInputStream();
         String securityAns = request.getParameter("SecurityAns");
-
+        
+        if(firstName==""){
+            System.out.println("skdjsvjmd");
+            request.setAttribute("firstname","firstname should not be empty");
+            RequestDispatcher rd = request.getRequestDispatcher("register.jsp");
+            rd.include(request, response);
+        }
         UserBean newUser = new UserBean();
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);

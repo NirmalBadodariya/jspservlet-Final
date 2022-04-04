@@ -7,10 +7,10 @@ import serviceinterface.SignupServiceInterface;
 public class LoginService implements LoginServiceInterface{
     private dao.Userdao Userdao;
     
-    public int checkUser(UserBean user) {
+    public String checkUser(UserBean user) {
         Userdao = new dao.Userdao();
-       int usertype =  Userdao.checkUser(user);
-        return usertype;
+       String usertype =  Userdao.checkUser(user);
+        return usertype ;
     }
     
 }

@@ -3,6 +3,10 @@ package controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
+import dao.Userdao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,9 +19,10 @@ import model.ForgotPassBean;
 public class ChangePass extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private dao.Userdao Userdao;
-
+    Logger log = Logger.getLogger(Userdao.class.getName());
     public void init() {
         Userdao = new dao.Userdao();
+        BasicConfigurator.configure();
     }
 
     @Override

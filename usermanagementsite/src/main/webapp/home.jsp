@@ -22,7 +22,10 @@
 	}
 	%>
 
-    <button class="btn btn-info"><a href="Profile.jsp" style="text-decoration:none;">profile</a></button>
+	<form>
+	<button class="btn btn-info"><a href="EditDetails"  style="text-decoration:none;">profile</a></button>
+	</form>
+    
     <form action="Logout" method="post">
     <button  class="btn btn-danger" style="display:flex;">Logout</button>
     </form>

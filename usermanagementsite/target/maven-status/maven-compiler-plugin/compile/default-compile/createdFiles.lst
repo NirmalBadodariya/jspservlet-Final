@@ -7,7 +7,6 @@ controller\ForgotPass.class
 model\UserBean.class
 controller\Login.class
 model\ForgotPassBean.class
-controller\Signup.class
 service\LoginService.class
 dao\Userdao.class
 model\AddressBean.class

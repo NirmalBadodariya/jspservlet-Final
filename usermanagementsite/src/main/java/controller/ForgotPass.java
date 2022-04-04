@@ -3,6 +3,10 @@ package controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
+import dao.Userdao;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,9 +20,10 @@ import model.UserBean;
 public class ForgotPass extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private dao.Userdao Userdao;
-
+  Logger log = Logger.getLogger(Userdao.class.getName());
     public void init() {
         Userdao = new dao.Userdao();
+        BasicConfigurator.configure();
     }
 
     @Override
@@ -26,7 +31,7 @@ public class ForgotPass extends HttpServlet {
             throws ServletException, IOException {
         doPost(request, response);
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

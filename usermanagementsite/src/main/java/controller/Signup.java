@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -28,18 +31,15 @@ public class Signup extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private dao.Userdao Userdao;
     private SignupService signupService;
+    Logger log = Logger.getLogger(Signup.class.getName());
     public void init() {
         Userdao = new dao.Userdao();
 
         signupService = new SignupService();
+        BasicConfigurator.configure();
 
     }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
-    }   
+  
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -48,6 +48,12 @@ public class Signup extends HttpServlet {
         
         Part filePart = request.getPart("image");
         String firstName = request.getParameter("firstname");
+        if(firstName.equals("")){
+            request.setAttribute("firstname","firstname should not be empty");
+            RequestDispatcher rd = request.getRequestDispatcher("register.jsp");
+            rd.include(request, response);
+        }
+        
         String lastName = request.getParameter("lastname");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
@@ -57,12 +63,6 @@ public class Signup extends HttpServlet {
         InputStream image = filePart.getInputStream();
         String securityAns = request.getParameter("SecurityAns");
         
-        if(firstName==""){
-            System.out.println("skdjsvjmd");
-            request.setAttribute("firstname","firstname should not be empty");
-            RequestDispatcher rd = request.getRequestDispatcher("register.jsp");
-            rd.include(request, response);
-        }
         UserBean newUser = new UserBean();
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
@@ -73,6 +73,7 @@ public class Signup extends HttpServlet {
         newUser.setPass(pass);
         newUser.setImage(image);
         newUser.setSecurityAns(securityAns);
+        
         int i = 0;
         ArrayList<AddressBean> addresses = new ArrayList<>();
         while (true) {
@@ -89,8 +90,7 @@ public class Signup extends HttpServlet {
             addresses.add(new AddressBean(ALine1, ALine2, city, state, pin));
         }
         newUser.setAddresses(addresses);
-        // String id = Userdao.insertUser(newUser);
-
+        
         String id  = signupService.insertUser(newUser);
         
         if (id != null) {

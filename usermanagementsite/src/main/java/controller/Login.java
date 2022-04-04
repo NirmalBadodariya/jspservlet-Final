@@ -36,12 +36,6 @@ public class Login extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
@@ -54,20 +48,20 @@ public class Login extends HttpServlet {
         newUser.setPass(pass);
         HttpSession session = request.getSession();
         session.setAttribute("email", email);
-
-        int usertype = loginService.checkUser(newUser);
-
-        if (usertype == 1) {
+                
+        String usertype = loginService.checkUser(newUser);
+                
+        if (usertype == "User") {
             response.sendRedirect("home.jsp");
 
-        } else if (usertype == 2) {
+        } else if (usertype == "Admin") {
             response.sendRedirect("adminHome.jsp");
         } else {
             request.setAttribute("error","Invalid email or Password");
             RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
             rd.include(request, response);
         }
-
+        
     }
 
     @Override

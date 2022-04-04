@@ -1,5 +1,4 @@
 d:\jspservlet Final\usermanagementsite\src\main\java\controller\DeleteUser.java
-d:\jspservlet Final\usermanagementsite\src\main\java\dao\adminDBConnection.java
 d:\jspservlet Final\usermanagementsite\src\main\java\service\LoginService.java
 d:\jspservlet Final\usermanagementsite\src\main\java\model\UserBean.java
 d:\jspservlet Final\usermanagementsite\src\main\java\service\DeleteUserService.java
@@ -17,6 +16,8 @@ d:\jspservlet Final\usermanagementsite\src\main\java\controller\Signup.java
 d:\jspservlet Final\usermanagementsite\src\main\java\model\ForgotPassBean.java
 d:\jspservlet Final\usermanagementsite\src\main\java\serviceinterface\LoginServiceInterface.java
 d:\jspservlet Final\usermanagementsite\src\main\java\dao\Userdao.java
+d:\jspservlet Final\usermanagementsite\src\main\java\controller\EditDetails.java
 d:\jspservlet Final\usermanagementsite\src\main\java\dao\DBConnection.java
 d:\jspservlet Final\usermanagementsite\src\main\java\controller\Logout.java
 d:\jspservlet Final\usermanagementsite\src\main\java\dao\AdminDao.java
+d:\jspservlet Final\usermanagementsite\src\main\java\controller\EditUserDetails.java

@@ -10,22 +10,22 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import daoInterface.UserdaoInterface;
+import model.AddressBean;
 import model.ForgotPassBean;
 import model.UserBean;
 
 public class Userdao extends DBConnection implements UserdaoInterface {
     Logger log = Logger.getLogger(Userdao.class.getName());
 
-
     public void init() {
-        
+
         BasicConfigurator.configure();
-        
 
     }
+
     public String insertUser(UserBean user) {
         try {
-            
+
             Connection connection = getDBConnection();
             if (connection != null) {
                 // adding data to users table.
@@ -55,7 +55,6 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 // adding data to addresses table
                 for (int i = 0; i < user.getAddresses().size(); i++) {
 
-                        
                     PreparedStatement preparedStatement1 = connection.prepareStatement(insert_addresses);
                     preparedStatement1.setString(1, id);
 
@@ -69,39 +68,39 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 return id;
 
             } else {
-               log.error("Connection Not Established");
+                log.error("Connection Not Established");
             }
 
         } catch (Exception e) {
-            log.error("Exception:"+e);
+            log.error("Exception:" + e);
         }
         return null;
     }
 
     // Checking userdata for logging in.
-    public int checkUser(UserBean user) {
-        int usertype = 0;
+    public String checkUser(UserBean user) {
+        String usertype = "";
         try {
             Connection connection = getDBConnection();
             if (connection != null) {
 
                 PreparedStatement preparedStatement = connection.prepareStatement(login_credentials);
-                
+
                 ResultSet rs = preparedStatement.executeQuery();
                 // loop through database to find matching email and pass
-                while (rs.next()) { 
-                    
+                while (rs.next()) {
+
                     if (rs.getString("email").equals(user.getEmail()) && rs.getString("pass").equals(user.getPass())
                             && rs.getString(4).equals("1")) {
-                                // usertype defines type of user 1 for user.
-                        usertype = 1;
-                        
+                        // usertype defines type of user 1 for user.
+                        usertype = "User";
+                                
                         break;
                     } else if (rs.getString("email").equals(user.getEmail())
                             && rs.getString("pass").equals(user.getPass()) && rs.getString(4).equals("2")) {
-                                // usertype defines type of user 2 for admin.
-                        usertype = 2;
-                        
+                        // usertype defines type of user 2 for admin.
+                        usertype = "Admin";
+
                         break;
                     }
                 }
@@ -109,13 +108,13 @@ public class Userdao extends DBConnection implements UserdaoInterface {
             }
 
         } catch (Exception e) {
-            log.error("Exception:"+e);
+            log.error("Exception:" + e);
         }
         return usertype;
 
     }
 
-    // again checking details of users if he has forgot his pass 
+    // again checking details of users if he has forgot his pass
     // details we are checking here are DOB and security ans from user into database
     public boolean checkUserDetailsForForgotPass(UserBean checkForgotpassDetails) {
         boolean check = false;
@@ -141,14 +140,15 @@ public class Userdao extends DBConnection implements UserdaoInterface {
             }
 
         } catch (Exception e) {
-            log.error("Exception:"+e);
+            log.error("Exception:" + e);
         }
         return check;
     }
+
     // updating password of user if he has forgotten it.
     public void setNewPass(ForgotPassBean forgotPass) {
         try {
-            
+
             Connection connection = getDBConnection();
             if (connection != null) {
                 PreparedStatement preparedStatement = connection.prepareStatement(changePass);
@@ -162,9 +162,64 @@ public class Userdao extends DBConnection implements UserdaoInterface {
             }
 
         } catch (Exception e) {
-            log.error("Exception :"+e);
-            
+            log.error("Exception :" + e);
+
         }
     }
-    
+
+    // Getting UserDetails to show to user for editing.
+    public UserBean getUserDetails(String email) {
+        
+        ArrayList<AddressBean> addresses = new ArrayList<>();
+        try {
+            
+            Connection connection = getDBConnection();
+            if (connection != null) {
+                String query = "select * from users  where email=?";
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, email);
+                ResultSet rs = preparedStatement.executeQuery();
+                UserBean user = new UserBean();
+                rs.next();
+                int id = rs.getInt(1);
+                user.setId(rs.getInt(1));
+                user.setFirstName(rs.getString(2));
+                user.setLastName(rs.getString(3));
+                user.setEmail(rs.getString(4));
+                user.setPhone(rs.getString(5));
+                user.setGender(rs.getString(6));
+                user.setDob(rs.getString(7));
+                user.setPass(rs.getString(8));
+                user.setSecurityAns(rs.getString(9));
+
+                
+
+                String query1 = "select * from user_addresses  where user_id=?";
+                PreparedStatement ps1 = connection.prepareStatement(query1);
+                ps1.setInt(1, id);
+                ResultSet rs1 = ps1.executeQuery();
+                AddressBean addressesOfUsers = new AddressBean();
+
+                while (rs1.next()) {
+                    addressesOfUsers.setAddressLine1(rs1.getString(3));
+                    addressesOfUsers.setAddressLine2(rs1.getString(4));
+                    addressesOfUsers.setCity(rs1.getString(5));
+                    addressesOfUsers.setPincode(rs1.getInt(6));
+                    addressesOfUsers.setState(rs1.getString(7));
+                    addresses.add(addressesOfUsers);
+                }
+                user.setAddresses(addresses);
+                
+                return user;
+            } else {
+                log.error("Connection is null");
+            }
+        } catch (Exception e) {
+            log.error("Exception:" + e);
+
+        }
+        return null;
+
+    }
+
 }

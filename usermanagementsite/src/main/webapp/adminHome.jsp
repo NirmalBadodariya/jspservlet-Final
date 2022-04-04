@@ -17,36 +17,27 @@ $(document).ready(function() {
             if(data!=null){
                 $("#showData").find("tr:gt(0)").remove();
                 
-//                 $.each(data, function(i, item) {
-//     $('<tr>').html("<td><button>EDIT</button></td>").appendTo('#showData');
-// });
-                
                 $("#showData").DataTable({
                     data : data,
                     columns: [
                         { data: 'id'},
                         { data: 'firstName'},
                         { data: 'email'},
-                        { data: null, title: 'Action', wrap: true, "render": function (item) { return '<div class="btn-group"> <button type="button"  onclick="deleteUr()" value="0" class="btn btn-info" data-toggle="modal" data-target="#myModal">EDIT</button></div>' } },
+                        { data: null, title: 'Action', wrap: true, "render": function (item) { return '<div class="btn-group"> <button type="button"  onclick="EditUserDetails(' + item.id + ')" value="0" class="btn btn-info" data-toggle="modal" data-target="#myModal">EDIT</button></div>' } },
                         { data: null, title: 'DELETE', wrap: true, "render": function (item) { return '<div class="btn-group"> <button type="button"  onclick="DeleteUser(' + item.id + ')"  class="btn btn-danger">DELETE</button></div>' } },
                     ],
-
-                    // columnDefs: [
-                    //     {
-                    //         "defaultContent": "-",
-                    //         "targets": "_all",
-                    //     },
-                    // ],
+        
+                   
                 });
             }
             else{
                 alert("Data is coming null");
             }
             });
-    
+
             $("#tablediv").show();          
   });      
-
+            
 });
 function DeleteUser(userId) {
 
@@ -59,12 +50,25 @@ function DeleteUser(userId) {
 );
      };     
 
+
+function EditUserDetails(userId) {
+
+			$.post("EditUserDetails", {
+				"userId" : userId
+			}, function() {
+				window.location.reload();
+                ('#showUserDetails').click();
+			}
+);
+     };   
+
 		
 </script>
 
 </head>
 <body>
    <button id="showUserDetails" class="btn btn-info">showUserDetails</button>
+   <button id="addUser" class="btn btn-info"><a href="register.jsp">AddNewUser</a></button>
     <div id="tablediv">
 <table cellspacing="0" id="showData"> 
     <thead> 

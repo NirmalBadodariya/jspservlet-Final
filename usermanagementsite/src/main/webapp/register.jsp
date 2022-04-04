@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page isELIgnored = "false" %>
+<%@page import="model.UserBean"%>
+<%@page import="model.AddressBean"%>
+<%@page import="java.util.ArrayList"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +21,7 @@
 	<script src="./jquery-ui.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
     
-   
+    
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="./css/register.css" rel="stylesheet" media="all">
 
@@ -49,7 +52,10 @@
         }
         </style>
 </head>
-           
+
+            <c:set var="user" scope="session" value="${requestScope.detailsofUser}"/> 
+            
+
 <body>
     <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
         <div class="wrapper wrapper--w790">
@@ -57,6 +63,7 @@
                 <div class="card-heading">
                     <h2 class="title">User Registration form</h2>
                 </div>
+                
                 <div class="card-body">
                     <form action="Signup" method="POST" enctype="multipart/form-data" onsubmit="return validateform()">
                         <div class="form-row m-b-55">
@@ -65,16 +72,17 @@
                                 <div class="row row-space">
                                     <div class="col-2">
                                         <div class="input-group-desc">
-                                            <input class="input--style-5" type="text" name="firstname" id="firstname">
+                                            <input class="input--style-5" type="text" name="firstname" id="firstname" value="<c:out value="${user.getFirstName()}"/>">
                                             <label class="label--desc">first name</label>
                                         </div>
                                     </div>
+                                    
                                     <c:if test="${firstname != null}">
                                          <c:out value="${firstname}" />
                                     </c:if>
                                     <div class="col-2">
                                         <div class="input-group-desc">
-                                            <input class="input--style-5" type="text" name="lastname"  id="lastname">
+                                            <input class="input--style-5" type="text" name="lastname"  id="lastname" value="<c:out value="${user.getLastName()}"/>">
                                             <label class="label--desc">last name</label>
                                         </div>
                                     </div>
@@ -86,7 +94,7 @@
                             <div class="name">Email</div>
                             <div class="value">
                                 <div class="input-group">
-                                    <input class="input--style-5" type="email" id="email" name="email">
+                                    <input class="input--style-5" type="email" id="email" name="email" value="<c:out value="${user.getEmail()}"/>">
                                 </div>
                             </div>
                         </div>
@@ -97,7 +105,7 @@
                                     
                                     <div class="col-9">
                                         <div class="input-group-desc">
-                                            <input class="input--style-5" type="number" name="phone" id="phone">
+                                            <input class="input--style-5" type="number" name="phone" id="phone" value="<c:out value="${user.getPhone()}"/>">
                                             <label class="label--desc">Phone Number</label>
                                         </div>
                                     </div>
@@ -116,21 +124,21 @@
                                 <div class="row row-refine">
                                     <div class="col-9">
                                         <div class="input-group-desc">
-                                            <input class="input--style-5" type="date" name="dob" id="dob">
+                                            <input class="input--style-5" type="date" name="dob" id="dob" value="<c:out value="${user.getDob()}"/>">
                                             
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
+                                
                         <div class="form-row m-b-55">
                             <div class="name">Password</div>
                             <div class="value">
                                 <div class="row row-refine">
                                     <div class="col-9">
                                         <div class="input-group-desc">
-                                            <input class="input--style-5" type="password" name="pass" id="pass">
+                                            <input class="input--style-5" type="password" name="pass" id="pass" value="<c:out value="${user.getPass()}"/>">
                                             
                                         </div>
                                     </div>
@@ -160,8 +168,8 @@
                                     <div class="col-9">
                                         <div class="input-group-desc">
                                             <p>What was your first school name?</p>
-                                            <input class="input--style-5" type="text" name="SecurityAns" id="securityans">
-                                            
+                                            <input class="input--style-5" type="text" name="SecurityAns" id="securityans" value="<c:out value="${user.getSecurityAns()}"/>">
+
                                         </div>
                                     </div>
                                 </div>
@@ -171,13 +179,24 @@
 						<div class="container" style="margin:150px auto">
     <div class="margin-t-md">
         <div class="customer-form">
+            <%-- <%
+            ArrayList<AddressBean> addresses = user.getAddresses();
+            %> --%>
+            <c:set var="addresses" scope="session" value="${requestScope.addresses}"/> 
             
-
+            <%-- <c:set var="addressSize" scope="session" value="${addresses.size()}"/> --%>
+                    <%-- <c:forEach var="address" items="${addresses}" begin="0" end="2"> --%>
+                    <%-- <c:out value ="${addresses.get(0).getAddressLine1()}"/> --%>
+                      <%-- <br/> --%>
+                    <%-- </c:forEach> --%>
             <form action="Signup" method="post" role="form" autocomplete="off" >
-            
 
+                
                 <div id="main-container">
+                    
                     <div class="panel card container-item">
+                    
+                    
                         <div class="panel-body">
                             <div class="panel-body">
 
@@ -185,12 +204,12 @@
                                     <div class="col-sm-6">
                                         <div class="form-group d-none">
                                             <label class="control-label" for="address_id_0">Address line 1</label>
-                                            <input type="text" id="address_id_0" class="form-control" name="Address[0][address_id]">
+                                            <input type="text" id="address_id_0" class="form-control" name="Address[0][address_id]" >
                                             <p class="help-block help-block-error"></p>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label" for="address_line_one_0">Address line 1</label>
-                                            <input type="text" id="address_line_one_0" class="form-control" name="Address[0][address_line1]" maxlength="255">
+                                            <input type="text" id="address_line_one_0" class="form-control" name="Address[0][address_line1]" maxlength="255" value="<c:out value="${addresses.get(0).getAddressLine2()}"/>">
                                             <p class="help-block help-block-error"></p>
                                         </div>
                                     </div>
@@ -249,6 +268,7 @@
                                 </div>
                             </div>
                         </div>
+                      
                     </div>
                 </div>
                 <div class="card">
@@ -260,25 +280,25 @@
                 </div>
                 
             </form>
+            
         </div>
     </div>
 </div>
-
 					<br><br>
 				</th> 
                     </form>
                     
 					
-
+    
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
 	
 
     
 
-	
+    
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -288,11 +308,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.js"></script>
 <script src="https://cdn.ckeditor.com/4.5.1/standard/ckeditor.js"></script>
 <script src="./js/cloneData.js" type="text/javascript"></script>
+
+                <Script>
+                jQuery(function(){ 
+                    for(var i=0;i<addresses.size();i++){
+                        alert("hello");
+                    jQuery('#add-more').trigger('click'); 
+                    }
+                    });
+                    
+                      
+                     
+                </script>
 <script>
 
 
 
-
+    
     $('a#add-more').cloneData({
         mainContainerId: 'main-container', // Main container Should be ID
         cloneContainer: 'container-item', // Which you want to clone
@@ -325,7 +357,7 @@
     /*$('.select2').select2({
         placeholder: 'Select a month'
     });*/
-
+    
     $(document).ready(function () {
         $('.datepicker').datepicker();
     });
@@ -375,11 +407,11 @@ try {
 <script>
 		function validateform() {
 			
-			var fname = $("#firstname").val();
+			// var fname = $("#firstname").val();
             var lname = $("#lastname").val();
             var email = $("#email").val();
             var phone = $("#phone").val();
-           
+            
             var dob = $("#dob").val();
             var pass = $("#pass").val();
             var securityans = $("#securityans").val();
@@ -389,13 +421,13 @@ try {
             
             
 
-            var addressLineOne = $("#address_line_one_0").val();
-            var addressLineTwo = $("#address_line_two_0").val();
-            var pincode = $("#pincode_0").val();
+            // var addressLineOne = $("#address_line_one_0").val();
+            // var addressLineTwo = $("#address_line_two_0").val();
+            // var pincode = $("#pincode_0").val();
             
 
-			if (fname != "" && lname != "" && email != "" && phone !="" && genderselect.length > 0 && dob != "" && pass != "" && securityans != "") {
-                if (fname.length>10 || lname.length>10) {
+			if ( lname != "" && email != "" && phone !="" && genderselect.length > 0 && dob != "" && pass != "" && securityans != "") {
+                if ( lname.length>10) {
                     alert("Too long name");
                     return false;
                 }
@@ -414,10 +446,10 @@ try {
                         
 
                 
-                else if(addressLineOne == "" || addressLineTwo == "" || pincode == ""){
-                    alert("no address filed should be empty");
-                    return false;
-                }
+                // else if(addressLineOne == "" || addressLineTwo == "" || pincode == ""){
+                //     alert("no address filed should be empty");
+                //     return false;
+                // }
                 else{
                     
                     return true;
@@ -432,29 +464,38 @@ try {
         var count =1;
 	</script>
     <script>
-    
+
+                
             $('body').on('click', '#add-more', function () {
                 count++;
                 
             });
     function checkAddress() {
-        alert(count);
-        for(int i=0;i<count;i++){
+        var temp=0;
+        for(var i = 0;i<count;i++){
             
             
             var addressLineOne = $("#address_line_one_"+i).val();
             var addressLineTwo = $("#address_line_two_"+i).val();
+            //  $('#add-more').prop('disabled', true)      
             var pincode = $("#pincode_"+i).val();
              if(addressLineOne == "" || addressLineTwo == "" || pincode == ""){
-                    alert("no address filed should be empty");
+                    //  $("#add-more").attr('disabled', true);
+                   temp++;
+                     alert("no address filed should be empty");
                     return false;
                 }
-                else{
-                    return true;
-                }
+                
+                
+                
+        }
+        if(temp==0){
+
+            return true;
         }
         
-        return false;
+        
+        
     }
     </script>
 </body>

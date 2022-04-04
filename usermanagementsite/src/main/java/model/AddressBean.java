@@ -14,6 +14,8 @@ public class AddressBean {
         this.state = state;
         this.pincode = pincode;
     }
+    public AddressBean() {
+    }
     public String getAddressLine1() {
         return addressLine1;
     }

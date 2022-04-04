@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import daoInterface.AdminDaoInterface;
 import model.UserBean;
 
-public class AdminDao extends adminDBConnection implements AdminDaoInterface {
+public class AdminDao extends DBConnection implements AdminDaoInterface {
     Logger log = Logger.getLogger(Userdao.class.getName());
 
     public void init() {
@@ -25,15 +25,15 @@ public class AdminDao extends adminDBConnection implements AdminDaoInterface {
         ArrayList<UserBean> userDetails = new ArrayList<>();
         try {
 
-            Connection connection = getadminDBConnection();
+            Connection connection = getDBConnection();
             if (connection != null) {
 
                 PreparedStatement preparedStatement = connection.prepareStatement(userDetailsQuery);
-                
+
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
-
+                    
                     UserBean user = new UserBean();
                     user.setId(rs.getInt(1));
                     user.setFirstName(rs.getString(2));
@@ -50,14 +50,14 @@ public class AdminDao extends adminDBConnection implements AdminDaoInterface {
 
         }
         return null;
-
+        
     }
 
     // deleting of user by admin.
     public void deleteUser(int userId) {
         try {
 
-            Connection connection = getadminDBConnection();
+            Connection connection = getDBConnection();
             if (connection != null) {
                 String deleteUserQUery1 = "DELETE FROM users where id="+userId;
                 PreparedStatement preparedStatement = connection.prepareStatement(deleteUserQUery1);

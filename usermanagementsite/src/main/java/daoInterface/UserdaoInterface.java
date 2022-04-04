@@ -18,5 +18,5 @@ public interface UserdaoInterface {
     
     public String insertUser(UserBean user);
 
-    public int checkUser(UserBean user);
+    public String checkUser(UserBean user);
 }

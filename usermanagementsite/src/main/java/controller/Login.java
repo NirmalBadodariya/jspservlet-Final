@@ -38,9 +38,9 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PrintWriter out = response.getWriter();
+        
         String email = request.getParameter("email");
-        // log.info("csdvsdv");
+        
         String pass = request.getParameter("pass");
 
         UserBean newUser = new UserBean();

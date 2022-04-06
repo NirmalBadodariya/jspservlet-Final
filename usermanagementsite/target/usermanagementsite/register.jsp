@@ -4,6 +4,8 @@
 <%@page import="model.UserBean"%>
 <%@page import="model.AddressBean"%>
 <%@page import="java.util.ArrayList"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -71,6 +73,10 @@
                             <div class="value">
                                 <div class="row row-space">
                                     <div class="col-2">
+                                        <div class="input-group-desc d-none">
+                                            <input class="input--style-5" type="text" name="id" id="id" value="<c:out value="${user.getId()}"/>">
+                                            <label class="label--desc">first name</label>
+                                        </div>
                                         <div class="input-group-desc">
                                             <input class="input--style-5" type="text" name="firstname" id="firstname" value="<c:out value="${user.getFirstName()}"/>">
                                             <label class="label--desc">first name</label>
@@ -131,7 +137,7 @@
                                 </div>
                             </div>
                         </div>
-
+                                
                         <div class="form-row m-b-55">
                             <div class="name">Password</div>
                             <div class="value">
@@ -169,26 +175,20 @@
                                         <div class="input-group-desc">
                                             <p>What was your first school name?</p>
                                             <input class="input--style-5" type="text" name="SecurityAns" id="securityans" value="<c:out value="${user.getSecurityAns()}"/>">
-                                            
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    
+
 						<div class="container" style="margin:150px auto">
     <div class="margin-t-md">
         <div class="customer-form">
-            <%-- <%
-            ArrayList<AddressBean> addresses = user.getAddresses();
-            %> --%>
-            <c:set var="addresses" scope="session" value="${requestScope.addresses}"/> 
+            
+            <%-- <c:set var="addresses" scope="session" value="${requestScope.addresses}"/>  --%>
 
-            <%-- <c:set var="addressSize" scope="session" value="${addresses.size()}"/> --%>
-                    <%-- <c:forEach var="address" items="${addresses}" begin="0" end="2"> --%>
-                    <%-- <c:out value ="${addresses.get(0).getAddressLine1()}"/> --%>
-                      <%-- <br/> --%>
-                    <%-- </c:forEach> --%>
+            
             <form action="Signup" method="post" role="form" autocomplete="off" >
 
                 
@@ -196,7 +196,7 @@
                     
                     <div class="panel card container-item">
                     
-                    
+                        <%-- value="<c:out value="${addresses.get(0).getAddressLine2()}"/>" --%>
                         <div class="panel-body">
                             <div class="panel-body">
 
@@ -204,19 +204,19 @@
                                     <div class="col-sm-6">
                                         <div class="form-group d-none">
                                             <label class="control-label" for="address_id_0">Address line 1</label>
-                                            <input type="text" id="address_id_0" class="form-control" name="Address[0][address_id]" >
+                                            <input type="text" id="address_id_0" class="form-control" name="Address[0][address_id]">
                                             <p class="help-block help-block-error"></p>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label" for="address_line_one_0">Address line 1</label>
-                                            <input type="text" id="address_line_one_0" class="form-control" name="Address[0][address_line1]" maxlength="255" value="<c:out value="${addresses.get(0).getAddressLine2()}"/>">
+                                            <input type="text" id="address_line_one_0" class="form-control" name="Address[0][address_line1]" maxlength="255" >
                                             <p class="help-block help-block-error"></p>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label class="control-label" for="address_line_two_0">Address line 2</label>
-                                            <input type="text" id="address_line_two_0" class="form-control" name="Address[0][address_line2]" maxlength="255">
+                                            <input type="text" id="address_line_two_0" class="form-control" name="Address[0][address_line2]" maxlength="255" >
                                             <p class="help-block help-block-error"></p>
                                         </div>
                                     </div>
@@ -248,17 +248,16 @@
 												<option value="Rajasthan">Rajasthan</option>
 												
 										</select>
-                                                
+                                                             
                                         </div>
                                     </div>
                                                         
                                 </div>
                                 <div class="col-sm-6">
                                         <div class="form-group">
-                                        <input class="form-control" id="pincode_0" type="number" name="Address[0][pincode]" placeholder="pincode">
+                                        <input class="form-control" id="pincode_0" type="number" name="Address[0][pincode]" placeholder="pincode" >
                                         </div>
                                         </div>
-
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div>
@@ -268,7 +267,7 @@
                                 </div>
                             </div>
                         </div>
-                      
+                        
                     </div>
                 </div>
                 <div class="card">
@@ -308,23 +307,38 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.js"></script>
 <script src="https://cdn.ckeditor.com/4.5.1/standard/ckeditor.js"></script>
 <script src="./js/cloneData.js" type="text/javascript"></script>
-
-                <Script>
-                jQuery(function(){ 
-                    for(var i=0;i<addresses.size();i++){
-                        alert("hello");
-                    jQuery('#add-more').trigger('click'); 
-                    }
-                    });
+                <script>var i =0;
+                    // document.getElementById("id").value = "<c:out value="${user.getId()}"/>";
                     
-                      
-                     
+                
                 </script>
+                <c:forEach items="${requestScope.addresses}" var="address" begin="0" end="${fn:length(addresses)}">
+                    <script>
+                    
+                jQuery(function(){ 
+                            
+                            if(i+1<${fn:length(addresses)}){
+                                 jQuery('#add-more').trigger('click');
+                            } 
+                            
+                            document.getElementById("address_id_"+i).value = "<c:out value="${address.getAddressId()}"/>";
+                            alert('<c:out value="${address.getAddressId()}"/>');
+                            document.getElementById("address_line_one_"+i).value = "<c:out value="${address.getAddressLine1()}"/>";
+                            document.getElementById("address_line_two_"+i).value = "<c:out value="${address.getAddressLine2()}"/>";
+                            document.getElementById("city_"+i).value = "<c:out value="${address.getCity()}"/>";
+                            document.getElementById("state_"+i).value = "<c:out value="${address.getState()}"/>";
+                            document.getElementById("pincode_"+i).value = "<c:out value="${address.getPincode()}"/>";
+                        i++;
+                            
+                    });
+                    </script>]
+                </c:forEach>
+                <script>    
+                        
+                    </script>
 <script>
 
 
-
-    
     $('a#add-more').cloneData({
         mainContainerId: 'main-container', // Main container Should be ID
         cloneContainer: 'container-item', // Which you want to clone
@@ -333,7 +347,7 @@
         removeConfirmMessage: 'Are you sure want to delete?', // confirm delete message
         //append: '<a href="javascript:void(0)" class="remove-item btn btn-sm btn-danger remove-social-media">Remove</a>', // Set extra HTML append to clone HTML
         minLimit: 1, // Default 1 set minimum clone HTML required
-        maxLimit: 5, // Default unlimited or set maximum limit of clone HTML
+        maxLimit: 0, // Default unlimited or set maximum limit of clone HTML
         defaultRender: 1,
         init: function () {
             console.info(':: Initialize Plugin ::');
@@ -353,7 +367,7 @@
         }
 
     });
-
+    
     /*$('.select2').select2({
         placeholder: 'Select a month'
     });*/
@@ -372,7 +386,6 @@
 
     };*/
     //CKEDITOR.replace('editor1');
-
 
 </script>
 <script type="text/javascript">
@@ -419,8 +432,6 @@ try {
             var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
             var passcheck = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
             
-            
-
             // var addressLineOne = $("#address_line_one_0").val();
             // var addressLineTwo = $("#address_line_two_0").val();
             // var pincode = $("#pincode_0").val();
@@ -443,9 +454,7 @@ try {
                     alert("Password must contain at least 1 capital letter,\n\n1 small letter, 1 number and 6 letters");
                     return false;
                 }
-                        
-
-                
+                  
                 // else if(addressLineOne == "" || addressLineTwo == "" || pincode == ""){
                 //     alert("no address filed should be empty");
                 //     return false;
@@ -464,29 +473,39 @@ try {
         var count =1;
 	</script>
     <script>
-
+    
                 
             $('body').on('click', '#add-more', function () {
                 count++;
                 
             });
+
+    // for(var j=0;j<count;j++){
+    // $(document).on('keyup', '#address_line_one_'+j, checkAddress());
+    // }
     function checkAddress() {
         var temp=0;
         for(var i = 0;i<count;i++){
             
-            
             var addressLineOne = $("#address_line_one_"+i).val();
             var addressLineTwo = $("#address_line_two_"+i).val();
-            //  $('#add-more').prop('disabled', true)      
+            var addressId  =$("#address_id_"+i).val();     
             var pincode = $("#pincode_"+i).val();
-             if(addressLineOne == "" || addressLineTwo == "" || pincode == ""){
-                    //  $("#add-more").attr('disabled', true);
-                   temp++;
-                     alert("no address filed should be empty");
-                    return false;
+            // if(addressId==""){
+            //     alert("wasd);
+            // }
+             while(addressLineOne=="" || addressLineTwo=="" || pincode==""){
+                //  alert(document.getElementById("add-more").innerHTML);
+                        
+                //      $("#add-more").click(function(){return false;});
+                    //  document.getElementById("add-more").disabled=true;
+                    temp++;
+                        alert("no address field should be empty");
+                        return false;
                 }
-                
-                
+                     document.getElementById("add-more").disabled=false;
+                     
+                    
                 
         }
         if(temp==0){

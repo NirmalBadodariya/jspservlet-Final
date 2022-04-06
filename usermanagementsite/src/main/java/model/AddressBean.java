@@ -6,13 +6,20 @@ public class AddressBean {
     private String city;
     private String state;
     private int pincode;
-    
-    public AddressBean(String addressLine1, String addressLine2, String city, String state, int pincode) {
+    private int addressId;
+    public AddressBean(int addressId,String addressLine1, String addressLine2, String city, String state, int pincode) {
+        this.addressId = addressId;
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
         this.city = city;
         this.state = state;
         this.pincode = pincode;
+    }
+    public int getAddressId() {
+        return addressId;
+    }
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
     }
     public AddressBean() {
     }

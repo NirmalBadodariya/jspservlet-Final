@@ -23,7 +23,7 @@ public class EditDetails extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private dao.Userdao Userdao;
     private SignupService signupService;
-    Logger log = Logger.getLogger(Userdao.class.getName());
+    Logger log = Logger.getLogger(EditDetails.class.getName());
     public void init() {
         Userdao = new dao.Userdao();
         BasicConfigurator.configure();
@@ -33,13 +33,17 @@ public class EditDetails extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-
+            
             HttpSession session = request.getSession();
             String email = (String) session.getAttribute("email");
             
-
+            
             UserBean detailsOfUsers = Userdao.getUserDetails(email);
             ArrayList<AddressBean> addresses = detailsOfUsers.getAddresses();
+            
+            // for(int i=0;i<addresses.size();i++){
+            //     System.out.println(i+" , "+addresses.get(i).getAddressId());
+            // }
             request.setAttribute("detailsofUser", detailsOfUsers);
             request.setAttribute("addresses", addresses);
             RequestDispatcher rd = request.getRequestDispatcher("register.jsp");

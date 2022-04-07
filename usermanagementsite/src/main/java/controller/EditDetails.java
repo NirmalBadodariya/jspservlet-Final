@@ -37,7 +37,6 @@ public class EditDetails extends HttpServlet {
             HttpSession session = request.getSession();
             String email = (String) session.getAttribute("email");
             
-            
             UserBean detailsOfUsers = Userdao.getUserDetails(email);
             ArrayList<AddressBean> addresses = detailsOfUsers.getAddresses();
             

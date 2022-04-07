@@ -48,9 +48,9 @@ public class Signup extends HttpServlet {
         Part filePart = request.getPart("image");
         String firstName = request.getParameter("firstname");
         // if (firstName=="") {
-        //     request.setAttribute("firstname", "firstname should not be empty");
-        //     RequestDispatcher rd = request.getRequestDispatcher("register.jsp");
-        //     rd.include(request, response);
+        // request.setAttribute("firstname", "firstname should not be empty");
+        // RequestDispatcher rd = request.getRequestDispatcher("register.jsp");
+        // rd.include(request, response);
         // }
 
         int hiddenId = Integer.parseInt(request.getParameter("id"));
@@ -62,53 +62,57 @@ public class Signup extends HttpServlet {
         String pass = request.getParameter("pass");
         InputStream image = filePart.getInputStream();
         String securityAns = request.getParameter("SecurityAns");
-        
+
         int i = 0;
-        int addressIdFound=0;
+        int addressIdFound = 0;
         ArrayList<AddressBean> addresses = new ArrayList<>();
-        List<Integer> addressIdList =  Userdao.getAddressId(hiddenId);
+        ArrayList<AddressBean> newAddresses = new ArrayList<>();
+        List<Integer> addressIdList = Userdao.getAddressId(hiddenId);
+        List<Integer> currentUserAddressIdList = new ArrayList<>();
+
         // for(int j =0;j<addressIdList.size();j++){
-        //     System.out.println("List: "+addressIdList.get(j));
+        // System.out.println("List: "+addressIdList.get(j));
         // }
 
-        int addressId=-1;
+        int addressId = -1;
         while (true) {
             String ALine1 = request.getParameter("Address[" + i + "][address_line1]");
             if (ALine1 == null) {
                 break;
             }
-            try {
-                
-                if(request.getParameter("Address[" + i + "][address_id]")!=null){
-                     
-                     addressId = Integer.parseInt(request.getParameter("Address[" + i + "][address_id]"));
-                }
-            } catch (Exception e) {
-                System.out.println("Exception"+e);
-            }
+
+            // System.out.println(request.getParameter(("Address[" + i +"][address_id]")).equals(""));
             
             String ALine2 = request.getParameter("Address[" + i + "][address_line2]");
             String city = request.getParameter("Address[" + i + "][city]");
             int pin = Integer.parseInt(request.getParameter("Address[" + i +
-                    "][pincode]"));
+            "][pincode]"));
             String state = request.getParameter("Address[" + i + "][state]");
             i++;
-            addresses.add(new AddressBean(addressId,ALine1, ALine2, city, state, pin));
-            // for(int k=0;k<addressIdList.size();k++){
-            //     if(addressIdList.get(k)!=addressId){
-            //         addressIdFound++;
-            //         System.out.println("ids found: "+ addressId);
-            //     }
-            // }
-            // if(addressIdFound==0){
-            //     System.out.println("in address not found");
-            //     UserBean newAddress = new UserBean();
-            //     newAddress.setAddresses(addresses);
-            //     newAddress.setId(hiddenId);
-            //     Userdao.addnewAddress(newAddress);
-            //     System.out.println("new address added");
-            // }
+
+            String temp = "";
+            if(request.getParameter("Address[" + i + "][address_id]") != null){
+
+                temp = request.getParameter("Address[" + i + "][address_id]");
+            }
+            // if(temp!=null){
+            if (!temp.equals("")) {
+                
+                addressId = Integer.parseInt(request.getParameter("Address[" + i + "][address_id]"));
+                currentUserAddressIdList.add(addressId);
+            }
+            if(addressId==-1){
+                newAddresses.add(new AddressBean(addressId, ALine1, ALine2, city, state, pin));
+                
+            }
+            else{
+                addresses.add(new AddressBean(addressId, ALine1, ALine2, city, state, pin));
+            }
         }
+
+        
+
+        
         UserBean newUser = new UserBean();
         newUser.setId(hiddenId);
         newUser.setFirstName(firstName);
@@ -122,9 +126,9 @@ public class Signup extends HttpServlet {
         newUser.setSecurityAns(securityAns);
         newUser.setAddresses(addresses);
 
-        if (hiddenId==0) {
+        if (hiddenId == 0) {
             String id = signupService.insertUser(newUser);
-            
+
             if (id != null) {
                 HttpSession session = request.getSession();
                 session.setAttribute("id", id);
@@ -136,9 +140,12 @@ public class Signup extends HttpServlet {
                 response.sendRedirect("home.jsp");
             }
         } else {
-            
-            newUser.setId(hiddenId);
-            Userdao.updateUserDetails(newUser);
+        
+        Userdao.addnewAddress(newAddresses,hiddenId);
+        Userdao.updateaddress(addresses,hiddenId);
+        // Deleted ids from user addresses  
+        addressIdList.removeAll(currentUserAddressIdList);
+        Userdao.removeAddresses(addressIdList);
             response.sendRedirect("home.jsp");
         }
     }

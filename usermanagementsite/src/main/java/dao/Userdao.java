@@ -245,14 +245,14 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 preparedStatement.setString(8, updateUser.getSecurityAns());
                 preparedStatement.setBlob(9, updateUser.getImage());
                 preparedStatement.setInt(10, updateUser.getId());
-
+                
                 preparedStatement.executeUpdate();
                     
 
                 for (int i = 0; i < updateUser.getAddresses().size(); i++) {
 
                     PreparedStatement preparedStatement1 = connection.prepareStatement(update_addresses);
-
+                    
                     preparedStatement1.setString(1, updateUser.getAddresses().get(i).getAddressLine1());
                     preparedStatement1.setString(2, updateUser.getAddresses().get(i).getAddressLine2());
                     preparedStatement1.setString(3, updateUser.getAddresses().get(i).getCity());
@@ -273,7 +273,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
     }
 
     public List<Integer> getAddressId(int hiddenId) {
-
+        
         try {
             
             Connection connection = getDBConnection();
@@ -294,7 +294,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                     log.error("Connection is null");
                 }
 
-            
+                
         } catch (Exception e) {
             log.error("Exception:" + e);
 
@@ -302,21 +302,44 @@ public class Userdao extends DBConnection implements UserdaoInterface {
         return null;
     }
 
-    public void addnewAddress(UserBean newAddress) {
+    public void removeAddresses(List<Integer> addressIdList) {
         try {
             
             Connection connection = getDBConnection();
             if (connection != null) {
-                for (int i = 0; i < newAddress.getAddresses().size(); i++) {
+                for(int i=0;i<addressIdList.size();i++){
+                    // System.out.println("removed id: "+addressIdList.get(i));
+                String deleteUserAddress = "DELETE FROM user_addresses where id="+addressIdList.get(i);
+                PreparedStatement preparedStatement = connection.prepareStatement(deleteUserAddress);
+                preparedStatement.executeUpdate();
+                }
+            }
+                else {
+                    log.error("Connection is null");
+                }
 
+                
+        } catch (Exception e) {
+            log.error("Exception:" + e);
+
+        }
+
+    }
+
+    public void addnewAddress(ArrayList<AddressBean> newAddresses, int hiddenId) {
+
+        try {
+            
+            Connection connection = getDBConnection();
+            if (connection != null) {
+                for (int i = 0; i < newAddresses.size(); i++) {
                     PreparedStatement preparedStatement1 = connection.prepareStatement(insert_addresses);
-                    preparedStatement1.setInt(1, newAddress.getId());
-                    
-                    preparedStatement1.setString(2, newAddress.getAddresses().get(i).getAddressLine1());
-                    preparedStatement1.setString(3, newAddress.getAddresses().get(i).getAddressLine2());
-                    preparedStatement1.setString(4, newAddress.getAddresses().get(i).getCity());
-                    preparedStatement1.setInt(5, newAddress.getAddresses().get(i).getPincode());
-                    preparedStatement1.setString(6, newAddress.getAddresses().get(i).getState());
+                    preparedStatement1.setInt(1, hiddenId);
+                    preparedStatement1.setString(2, newAddresses.get(i).getAddressLine1());
+                    preparedStatement1.setString(3, newAddresses.get(i).getAddressLine2());
+                    preparedStatement1.setString(4, newAddresses.get(i).getCity());
+                    preparedStatement1.setInt(5, newAddresses.get(i).getPincode());
+                    preparedStatement1.setString(6, newAddresses.get(i).getState());
                     preparedStatement1.executeUpdate();
                 }
                 }
@@ -331,5 +354,39 @@ public class Userdao extends DBConnection implements UserdaoInterface {
         }
 
     }
+
+	public void updateaddress(ArrayList<AddressBean> addresses, int hiddenId) {
+        try {
+            
+            Connection connection = getDBConnection();
+            if (connection != null) {
+                
+                for (int i = 0; i < addresses.size(); i++) {
+
+                    PreparedStatement preparedStatement1 = connection.prepareStatement(update_addresses);
+
+                    preparedStatement1.setString(1, addresses.get(i).getAddressLine1());
+                    preparedStatement1.setString(2, addresses.get(i).getAddressLine2());
+                    preparedStatement1.setString(3, addresses.get(i).getCity());
+                    preparedStatement1.setInt(4, addresses.get(i).getPincode());
+                    preparedStatement1.setString(5, addresses.get(i).getState());
+                    preparedStatement1.setInt(6, hiddenId);
+                    preparedStatement1.setInt(7, addresses.get(i).getAddressId());
+                    preparedStatement1.executeUpdate();
+                }
+
+
+                }
+                else {
+                    log.error("Connection is null");
+                }
+
+            
+        } catch (Exception e) {
+            log.error("Exception:" + e);
+
+        }
+
+	}
 
 }

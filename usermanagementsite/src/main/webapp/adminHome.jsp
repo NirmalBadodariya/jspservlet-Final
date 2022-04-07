@@ -27,7 +27,6 @@ $(document).ready(function() {
                         { data: null, title: 'DELETE', wrap: true, "render": function (item) { return '<div class="btn-group"> <button type="button"  onclick="DeleteUser(' + item.id + ')"  class="btn btn-danger">DELETE</button></div>' } },
                     ],
         
-                   
                 });
             }
             else{
@@ -47,7 +46,7 @@ function DeleteUser(userId) {
 				window.location.reload();
                 ('#showUserDetails').click();
 			}
-);
+);              
      };     
 
 
@@ -59,10 +58,10 @@ function EditUserDetails(userId) {
 				window.location.reload();
                 ('#showUserDetails').click();
 			}
-);
+);          
      };   
+            
 
-		
 </script>
 
 </head>

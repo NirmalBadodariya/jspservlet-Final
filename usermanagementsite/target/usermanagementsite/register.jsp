@@ -272,7 +272,7 @@
                 </div>
                 <div class="card">
                     <div>
-                        <a class="btn btn-success btn-sm" id="add-more" onclick="return checkAddress()" href="javascript:;" role="button"><i class="fa fa-plus"></i> Add more address</a>
+                        <button class="btn btn-success btn-sm" id="add-more" onclick="return checkAddress()" href="javascript:;" role="button"><i class="fa fa-plus"></i> Add more address</button>
                         <input type="submit" class="btn btn-primary btn-sm" value="Submit">
                     </div>
 
@@ -322,7 +322,6 @@
                             } 
                             
                             document.getElementById("address_id_"+i).value = "<c:out value="${address.getAddressId()}"/>";
-                            alert('<c:out value="${address.getAddressId()}"/>');
                             document.getElementById("address_line_one_"+i).value = "<c:out value="${address.getAddressLine1()}"/>";
                             document.getElementById("address_line_two_"+i).value = "<c:out value="${address.getAddressLine2()}"/>";
                             document.getElementById("city_"+i).value = "<c:out value="${address.getCity()}"/>";
@@ -333,6 +332,7 @@
                     });
                     </script>]
                 </c:forEach>
+                <%--  --%>
                 <script>    
                         
                     </script>
@@ -470,21 +470,22 @@ try {
 			}
             
 		}
-        var count =1;
+        var count =0;
 	</script>
     <script>
     
                 
-            $('body').on('click', '#add-more', function () {
-                count++;
+            // $('body').on('click', '#add-more', function () {
+            //     count++;
                 
-            });
+            // });
 
     // for(var j=0;j<count;j++){
     // $(document).on('keyup', '#address_line_one_'+j, checkAddress());
     // }
     function checkAddress() {
         var temp=0;
+        alert(count);
         for(var i = 0;i<count;i++){
             
             var addressLineOne = $("#address_line_one_"+i).val();
@@ -498,7 +499,7 @@ try {
                 //  alert(document.getElementById("add-more").innerHTML);
                         
                 //      $("#add-more").click(function(){return false;});
-                    //  document.getElementById("add-more").disabled=true;
+                     document.getElementById("add-more").disabled=true;
                     temp++;
                         alert("no address field should be empty");
                         return false;

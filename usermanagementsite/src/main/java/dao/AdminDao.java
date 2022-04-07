@@ -61,7 +61,6 @@ public class AdminDao extends DBConnection implements AdminDaoInterface {
             if (connection != null) {
                 String deleteUserQUery1 = "DELETE FROM users where id="+userId;
                 PreparedStatement preparedStatement = connection.prepareStatement(deleteUserQUery1);
-                System.out.println(deleteUserQUery1);
                 preparedStatement.executeUpdate();
 
             } else {

@@ -23,10 +23,10 @@ $(document).ready(function() {
                         { data: 'id'},
                         { data: 'firstName'},
                         { data: 'email'},
-                        { data: null, title: 'Action', wrap: true, "render": function (item) { return '<div class="btn-group"> <button type="button"  onclick="EditUserDetails(' + item.id + ')" value="0" class="btn btn-info" data-toggle="modal" data-target="#myModal">EDIT</button></div>' } },
+                        { data: null, title: 'Action', wrap: true, "render": function (item) { return '<div class="btn-group"> <button type="button"  onclick="EditUserDetails(\'' + item.email + '\')" class="btn btn-info" >EDIT</button></div> ' } },
                         { data: null, title: 'DELETE', wrap: true, "render": function (item) { return '<div class="btn-group"> <button type="button"  onclick="DeleteUser(' + item.id + ')"  class="btn btn-danger">DELETE</button></div>' } },
                     ],
-        
+
                 });
             }
             else{
@@ -39,7 +39,7 @@ $(document).ready(function() {
             
 });
 function DeleteUser(userId) {
-
+            
 			$.post("DeleteUser", {
 				"userId" : userId
 			}, function() {
@@ -50,18 +50,16 @@ function DeleteUser(userId) {
      };     
 
 
-function EditUserDetails(userId) {
-
-			$.post("EditUserDetails", {
-				"userId" : userId
-			}, function() {
-				window.location.reload();
-                ('#showUserDetails').click();
-			}
-);          
-     };   
+function EditUserDetails(email) {
+    alert("email:"+ email);
+    // console.log("firstname"+ email);
+    $.post("sessionStore",{"email": email},function() {
+        window.location.href = "EditDetails"
+    });
+        
+}  
+ 
             
-
 </script>
 
 </head>
@@ -77,7 +75,7 @@ function EditUserDetails(userId) {
         <th style="text-align:start; width:33.3% !important;">Email</th> 
         <th style="text-align:start; width:33.3% !important;">EDIT</th> 
         <th style="text-align:start; width:33.3% !important;">DELETE</th> 
-
+            
            </tr>    
     </thead>
     <tbody>

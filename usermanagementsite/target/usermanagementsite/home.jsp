@@ -25,8 +25,8 @@
 	}
 	%>
 
-	<form>
-	<button class="btn btn-info"><a href="EditDetails"  style="text-decoration:none;">profile</a></button>
+	<form action="EditDetails">
+	<button class="btn btn-info">Profile</button>
 	</form>
     
     <form action="Logout" method="post">

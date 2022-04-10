@@ -18,8 +18,7 @@ public interface UserdaoInterface {
 
         public static final String update_user = "UPDATE  users set firstname=?,lastname=?,email=?,phone=?,gender=?,dob=?,pass=?,security_ans=?,user_profile=? where id=?";
 
-        public static final String update_addresses = "update  user_addresses set address_line1=?,address_line2=?,city=?,pincode=?,state=? where user_id=? and id=?";
-                       
+        public static final String update_addresses = "update  user_addresses set address_line1=?,address_line2=?,city=?,pincode=?,state=? where user_id=? and id=?";               
 
         public String insertUser(UserBean user);
 

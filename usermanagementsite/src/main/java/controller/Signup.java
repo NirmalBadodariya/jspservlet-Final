@@ -45,15 +45,22 @@ public class Signup extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+                ArrayList<String> errors = new ArrayList<>();
         Part filePart = request.getPart("image");
         String firstName = request.getParameter("firstname");
-        // if (firstName=="") {
-        // request.setAttribute("firstname", "firstname should not be empty");
-        // RequestDispatcher rd = request.getRequestDispatcher("register.jsp");
-        // rd.include(request, response);
-        // }
-
-        int hiddenId = Integer.parseInt(request.getParameter("id"));
+        if (firstName.equals("")) {
+        errors.add("FIRSTNAME");
+        }
+        if(errors!=null){
+            request.setAttribute("errors", errors);
+        }
+        int hiddenId=0;
+        try {
+            
+            hiddenId = Integer.parseInt(request.getParameter("id"));
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
         String lastName = request.getParameter("lastname");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
@@ -62,18 +69,19 @@ public class Signup extends HttpServlet {
         String pass = request.getParameter("pass");
         InputStream image = filePart.getInputStream();
         String securityAns = request.getParameter("SecurityAns");
-
+            
         int i = 0;
-        int addressIdFound = 0;
         ArrayList<AddressBean> addresses = new ArrayList<>();
         ArrayList<AddressBean> newAddresses = new ArrayList<>();
-        List<Integer> addressIdList = Userdao.getAddressId(hiddenId);
         List<Integer> currentUserAddressIdList = new ArrayList<>();
 
+        HttpSession session = request.getSession();
         // for(int j =0;j<addressIdList.size();j++){
         // System.out.println("List: "+addressIdList.get(j));
         // }
-
+        ArrayList<AddressBean> oldAddresses =  (ArrayList<AddressBean>) session.getAttribute("UserOldAddresses");  
+        for(AddressBean obj : oldAddresses)
+            { System.out.println(obj.getAddressLine1()); }    
         int addressId = -1;
         while (true) {
             String ALine1 = request.getParameter("Address[" + i + "][address_line1]");
@@ -88,31 +96,48 @@ public class Signup extends HttpServlet {
             int pin = Integer.parseInt(request.getParameter("Address[" + i +
             "][pincode]"));
             String state = request.getParameter("Address[" + i + "][state]");
-            i++;
 
-            String temp = "";
-            if(request.getParameter("Address[" + i + "][address_id]") != null){
-
-                temp = request.getParameter("Address[" + i + "][address_id]");
-            }
+            
+            // String temp = "";
+            // if(request.getParameter("Address[" + i + "][address_id]") != null){
+                
+            //     temp = request.getParameter("Address[" + i + "][address_id]");
+            // }
             // if(temp!=null){
-            if (!temp.equals("")) {
-                
-                addressId = Integer.parseInt(request.getParameter("Address[" + i + "][address_id]"));
-                currentUserAddressIdList.add(addressId);
-            }
-            if(addressId==-1){
-                newAddresses.add(new AddressBean(addressId, ALine1, ALine2, city, state, pin));
-                
+            //     addressId = Integer.parseInt(request.getParameter("Address[" + i + "][address_id]"));
+            //     currentUserAddressIdList.add(addressId);
+            // }
+            
+            if(request.getParameter("Address[" + i + "][address_id]")!=null){
+            // if (request.getParameter("Address[" + i + "][address_id]")!=null && !request.getParameter("Address[" + i + "][address_id]").isEmpty()) {
+                System.out.println("temp not null");
+                  currentUserAddressIdList.add(addressId);
+
             }
             else{
-                addresses.add(new AddressBean(addressId, ALine1, ALine2, city, state, pin));
+                System.out.println("came in else");
+                addressId=-1;
             }
-        }
 
-        
+            if(addressId==-1){
+                newAddresses.add(new AddressBean(addressId, ALine1, ALine2, city, state, pin));
+                System.out.println("came if -1");
+            }
+            else{
+                for(AddressBean obj : oldAddresses)
+                    { 
+                        System.out.println("session: aline"+obj.getAddressLine1());
+                        System.out.println("legit: aline"+ALine1);
+                        if(obj.getAddressLine1()!=ALine1){
+                            addresses.add(new AddressBean(addressId, ALine1, ALine2, city, state, pin));
+                        }
+                    }   
+            }
+            i++;
+        }        
 
-        
+
+
         UserBean newUser = new UserBean();
         newUser.setId(hiddenId);
         newUser.setFirstName(firstName);
@@ -124,32 +149,41 @@ public class Signup extends HttpServlet {
         newUser.setPass(pass);
         newUser.setImage(image);
         newUser.setSecurityAns(securityAns);
-        newUser.setAddresses(addresses);
 
         if (hiddenId == 0) {
+            newUser.setAddresses(newAddresses);
             String id = signupService.insertUser(newUser);
-
-            if (id != null) {
-                HttpSession session = request.getSession();
-                session.setAttribute("id", id);
-                session.setAttribute("email", newUser.getEmail());
-                session.setAttribute("firstName", newUser.getFirstName());
-                session.setAttribute("lastName", newUser.getLastName());
-                session.setAttribute("pass", newUser.getPass());
-                session.setAttribute("phone", newUser.getPhone());
-                response.sendRedirect("home.jsp");
-            }
+            System.out.println("newuser deails");
+            response.sendRedirect("home.jsp");
+                       
+            // if (id != null) {
+            //     HttpSession session = request.getSession();
+            //     session.setAttribute("id", id);
+            //     session.setAttribute("email", newUser.getEmail());
+            //     session.setAttribute("firstName", newUser.getFirstName());
+            //     session.setAttribute("lastName", newUser.getLastName());
+            //     session.setAttribute("pass", newUser.getPass());
+            //     session.setAttribute("phone", newUser.getPhone());
+            //     response.sendRedirect("home.jsp");
+            // }
         } else {
+        List<Integer> addressIdList = Userdao.getAddressId(hiddenId);
         
+        Userdao.UpdateNewUserDetails(newUser);
+        // adding new addresses to db
         Userdao.addnewAddress(newAddresses,hiddenId);
-        Userdao.updateaddress(addresses,hiddenId);
+        // updating addresses to db
+      Userdao.updateaddress(addresses,hiddenId);
+
         // Deleted ids from user addresses  
+            
+        // removing deleted addresses from db
         addressIdList.removeAll(currentUserAddressIdList);
         Userdao.removeAddresses(addressIdList);
             response.sendRedirect("home.jsp");
         }
     }
-
+        
     @Override
     public void destroy() {
         // TODO Auto-generated method stub

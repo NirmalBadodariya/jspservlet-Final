@@ -1,12 +1,16 @@
 package dao;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
-
+import controller.AES;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
@@ -21,12 +25,12 @@ public class Userdao extends DBConnection implements UserdaoInterface {
     public void init() {
 
         BasicConfigurator.configure();
-
+        
     }
 
     public String insertUser(UserBean user) {
         try {
-            
+
             Connection connection = getDBConnection();
             if (connection != null) {
                 // adding data to users table.
@@ -38,10 +42,13 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 preparedStatement.setString(4, user.getPhone());
                 preparedStatement.setString(5, user.getGender());
                 preparedStatement.setString(6, user.getDob());
-                preparedStatement.setString(7, user.getPass());
+                // preparedStatement.setString(7, user.getPass());
                 preparedStatement.setString(8, user.getSecurityAns());
                 preparedStatement.setBlob(9, user.getImage());
-
+                final String secretKey = "ssshhhhhhhhhhh!!!!";
+                String encryptedString = AES.encrypt(user.getPass(), secretKey);
+                log.info("encrypted:"+encryptedString);
+                preparedStatement.setString(7, encryptedString);
                 preparedStatement.executeUpdate();
                 ResultSet res = preparedStatement.getGeneratedKeys();
                 res.next();
@@ -52,13 +59,13 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 ps.setString(1, id);
                 ps.setInt(2, 1);
                 ps.executeUpdate();
-
+                
                 // adding data to addresses table
                 for (int i = 0; i < user.getAddresses().size(); i++) {
 
                     PreparedStatement preparedStatement1 = connection.prepareStatement(insert_addresses);
                     preparedStatement1.setString(1, id);
-
+                    
                     preparedStatement1.setString(2, user.getAddresses().get(i).getAddressLine1());
                     preparedStatement1.setString(3, user.getAddresses().get(i).getAddressLine2());
                     preparedStatement1.setString(4, user.getAddresses().get(i).getCity());
@@ -90,15 +97,17 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 ResultSet rs = preparedStatement.executeQuery();
                 // loop through database to find matching email and pass
                 while (rs.next()) {
-
-                    if (rs.getString("email").equals(user.getEmail()) && rs.getString("pass").equals(user.getPass())
+                    final String secretKey = "ssshhhhhhhhhhh!!!!";
+                String decryptedPass = AES.decrypt(rs.getString("pass"), secretKey);
+                log.info("decrypted:"+decryptedPass);
+                    if (rs.getString("email").equals(user.getEmail()) && decryptedPass.equals(user.getPass())
                             && rs.getString(4).equals("1")) {
                         // usertype defines type of user 1 for user.
                         usertype = "User";
-                                
+
                         break;
                     } else if (rs.getString("email").equals(user.getEmail())
-                            && rs.getString("pass").equals(user.getPass()) && rs.getString(4).equals("2")) {
+                            && decryptedPass.equals(user.getPass()) && rs.getString(4).equals("2")) {
                         // usertype defines type of user 2 for admin.
                         usertype = "Admin";
 
@@ -173,6 +182,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
         
         ArrayList<AddressBean> addresses = new ArrayList<>();
         UserBean user = new UserBean();
+        InputStream in=null;
         try {
             
             Connection connection = getDBConnection();
@@ -190,8 +200,26 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 user.setPhone(rs.getString(5));
                 user.setGender(rs.getString(6));
                 user.setDob(rs.getString(7));
-                user.setPass(rs.getString(8));
+                 user.setPass(rs.getString(8));
                 user.setSecurityAns(rs.getString(9));
+                Blob blob = rs.getBlob(10);
+                //   final String secretKey = "ssshhhhhhhhhhh!!!!";
+                // String decryptedPass = AES.decrypt(rs.getString(8), secretKey);
+                // log.info("decrypted   :"+decryptedPass);
+                // user.setPass(decryptedPass);
+                InputStream inputStream = blob.getBinaryStream();
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                byte[] buffer = new byte[4096];
+                int bytesRead = -1;
+                 
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);                  
+                }
+                 
+                byte[] imageBytes = outputStream.toByteArray();
+                String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                // user.setImage(rs.getBinaryStream(10));
+                    user.setBase64Image(base64Image);
 
                 String query1 = "select * from user_addresses  where user_id=?";
                 PreparedStatement ps1 = connection.prepareStatement(query1);
@@ -200,7 +228,6 @@ public class Userdao extends DBConnection implements UserdaoInterface {
 
                 while (rs1.next()) {    
                     AddressBean addressesOfUsers = new AddressBean();
-                    
                     addressesOfUsers.setAddressId(rs1.getInt(1));
                     addressesOfUsers.setAddressLine1(rs1.getString(3));
                     addressesOfUsers.setAddressLine2(rs1.getString(4));
@@ -208,7 +235,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                     addressesOfUsers.setPincode(rs1.getInt(6));
                     addressesOfUsers.setState(rs1.getString(7));
                     addresses.add(addressesOfUsers);
-                }
+                }   
                 user.setAddresses(addresses);
                 // for(int i=0; i<addresses.size();i++){
                 //     System.out.println("in dao firstname:"+addresses.get(i).getAddressId());
@@ -222,9 +249,9 @@ public class Userdao extends DBConnection implements UserdaoInterface {
         } catch (Exception e) {
             log.error("Exception:" + e);
 
-        }
+        }   
         return null;
-
+                
     }
 
     public void updateUserDetails(UserBean updateUser) {
@@ -287,7 +314,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 while (rs1.next()) {
                     adressIdList.add(rs1.getInt(1));
                 }
-                    
+                        
                 return adressIdList;
                 }
                 else {
@@ -347,7 +374,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                     log.error("Connection is null");
                 }
 
-            
+                
         } catch (Exception e) {
             log.error("Exception:" + e);
 
@@ -357,14 +384,13 @@ public class Userdao extends DBConnection implements UserdaoInterface {
 
 	public void updateaddress(ArrayList<AddressBean> addresses, int hiddenId) {
         try {
-            
+
             Connection connection = getDBConnection();
             if (connection != null) {
-                
+                PreparedStatement preparedStatement1 = null;
                 for (int i = 0; i < addresses.size(); i++) {
-
-                    PreparedStatement preparedStatement1 = connection.prepareStatement(update_addresses);
-
+                    System.out.println("updating data");
+                    preparedStatement1  = connection.prepareStatement(update_addresses);    
                     preparedStatement1.setString(1, addresses.get(i).getAddressLine1());
                     preparedStatement1.setString(2, addresses.get(i).getAddressLine2());
                     preparedStatement1.setString(3, addresses.get(i).getCity());
@@ -372,9 +398,15 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                     preparedStatement1.setString(5, addresses.get(i).getState());
                     preparedStatement1.setInt(6, hiddenId);
                     preparedStatement1.setInt(7, addresses.get(i).getAddressId());
-                    preparedStatement1.executeUpdate();
+                    preparedStatement1.setString(8, addresses.get(i).getAddressLine1());
+                    preparedStatement1.setString(9, addresses.get(i).getAddressLine2());
+                    preparedStatement1.setString(10, addresses.get(i).getCity());
+                    preparedStatement1.setInt(11, addresses.get(i).getPincode());
+                    preparedStatement1.setString(12, addresses.get(i).getState());
+                  int a =  preparedStatement1.executeUpdate();
+                  System.out.println("as"+ a);
                 }
-
+                
 
                 }
                 else {
@@ -386,7 +418,42 @@ public class Userdao extends DBConnection implements UserdaoInterface {
             log.error("Exception:" + e);
 
         }
+        
 
 	}
 
-}
+	public void UpdateNewUserDetails(UserBean updateUser) {
+            try {
+                
+                Connection connection = getDBConnection();
+                if (connection != null) {
+                    PreparedStatement preparedStatement = connection.prepareStatement(update_user);
+                    preparedStatement.setString(1, updateUser.getFirstName());
+                    preparedStatement.setString(2, updateUser.getLastName());
+                    preparedStatement.setString(3, updateUser.getEmail());
+                    preparedStatement.setString(4, updateUser.getPhone());
+                    preparedStatement.setString(5, updateUser.getGender());
+                    preparedStatement.setString(6, updateUser.getDob());
+                    preparedStatement.setString(7, updateUser.getPass());
+                    preparedStatement.setString(8, updateUser.getSecurityAns());
+                    preparedStatement.setBlob(9, updateUser.getImage());
+                    preparedStatement.setInt(10, updateUser.getId());
+                    preparedStatement.executeUpdate();
+                   
+                    }
+                    
+    
+                 else {
+                    log.error("Connection Not Established");
+                }
+    
+            } catch (Exception e) {
+                log.error("Exception:" + e);
+            }
+            
+        }
+
+
+	}
+
+

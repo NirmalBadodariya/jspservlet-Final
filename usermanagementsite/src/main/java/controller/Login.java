@@ -27,7 +27,7 @@ public class Login extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Userdao Userdao;
     private LoginService loginService;
-
+    
     public void init() {
 
         BasicConfigurator.configure();
@@ -42,7 +42,7 @@ public class Login extends HttpServlet {
         String email = request.getParameter("email");
         
         String pass = request.getParameter("pass");
-
+                
         UserBean newUser = new UserBean();
         newUser.setEmail(email);
         newUser.setPass(pass);
@@ -53,7 +53,7 @@ public class Login extends HttpServlet {
                 
         if (usertype == "User") {
             response.sendRedirect("home.jsp");
-
+            
         } else if (usertype == "Admin") {
             response.sendRedirect("adminHome.jsp");
         } else {

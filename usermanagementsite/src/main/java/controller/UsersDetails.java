@@ -35,8 +35,11 @@ public class UsersDetails extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PrintWriter out = response.getWriter();
+        
         ArrayList<UserBean> userDetails = userDetailsService.getUserDetails();
+        for(int i=0;i<userDetails.size();i++){
+            System.out.println(userDetails.get(i).getFirstName());
+        }
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         String JSONObject = gson.toJson(userDetails);

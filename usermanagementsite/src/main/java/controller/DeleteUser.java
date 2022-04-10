@@ -25,9 +25,9 @@ public class DeleteUser extends HttpServlet {
 
         BasicConfigurator.configure();
         deleteUserService = new DeleteUserService();
-
+        
     }
-
+        
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

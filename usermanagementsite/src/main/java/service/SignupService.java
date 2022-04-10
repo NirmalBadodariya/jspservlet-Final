@@ -6,6 +6,7 @@ public class SignupService implements SignupServiceInterface {
     public String insertUser(UserBean newUser) {
         Userdao = new dao.Userdao();
        return  Userdao.insertUser(newUser);
+       
         
     }
 

@@ -56,8 +56,8 @@
 </head>
 
             <c:set var="user" scope="session" value="${requestScope.detailsofUser}"/> 
-            
 
+            
 <body>
     <div class="page-wrapper bg-gra-03 p-t-45 p-b-50">
         <div class="wrapper wrapper--w790">
@@ -82,7 +82,6 @@
                                             <label class="label--desc">first name</label>
                                         </div>
                                     </div>
-                                    
                                     <c:if test="${firstname != null}">
                                          <c:out value="${firstname}" />
                                     </c:if>
@@ -121,7 +120,7 @@
                         
                         <div class="form-row p-t-20">
                             <div class="name">Gender</div>
-                            Male:<input type="radio" name="gender" value="M" id="Gmale">
+                            Male:<input type="radio" name="gender" checked value="M" id="Gmale">
                            Female:<input type="radio" name="gender" value="F" id="Gfemale">
                         </div>
                         <div class="form-row m-b-55">
@@ -160,7 +159,7 @@
                                     <div class="col-9">
                                         <div class="input-group-desc">
                                             <input type="file" id="img" name="image" accept="image/*">
-                                            
+                                            <img src="data:image/jpg;base64,${user.getBase64Image()}" width="240" height="300"/>
                                         </div>
                                     </div>
                                 </div>
@@ -267,15 +266,15 @@
                                 </div>
                             </div>
                         </div>
-                        
+                    
                     </div>
                 </div>
                 <div class="card">
                     <div>
-                        <button class="btn btn-success btn-sm" id="add-more" onclick="return checkAddress()" href="javascript:;" role="button"><i class="fa fa-plus"></i> Add more address</button>
+                        <a type="button" class="btn btn-success btn-sm" id="add-more" onclick="return checkAddress()"  role="button"><i class="fa fa-plus"></i> Add more address</a>
                         <input type="submit" class="btn btn-primary btn-sm" value="Submit">
                     </div>
-
+                    
                 </div>
                 
             </form>
@@ -288,7 +287,7 @@
                     </form>
                     
 					
-    
+        
                 </div>
             </div>
         </div>
@@ -310,9 +309,8 @@
                 <script>var i =0;
                     // document.getElementById("id").value = "<c:out value="${user.getId()}"/>";
                     
-                
                 </script>
-                <c:forEach items="${requestScope.addresses}" var="address" begin="0" end="${fn:length(addresses)}">
+                <c:forEach items="${requestScope.addresses}" var="address">
                     <script>
                     
                 jQuery(function(){ 
@@ -327,10 +325,16 @@
                             document.getElementById("city_"+i).value = "<c:out value="${address.getCity()}"/>";
                             document.getElementById("state_"+i).value = "<c:out value="${address.getState()}"/>";
                             document.getElementById("pincode_"+i).value = "<c:out value="${address.getPincode()}"/>";
-                        i++;
-                            
+                            // <c:set var="para" value="${41+1}" scope="session"  />
+                        
+                        //     <jsp:useBean id="addressesInSession" class="java.util.ArrayList" scope="session"/>
+                        //     <c:set var="address_id" target="${sessionScope.addressesInSession}" value='${address.getAddressId()}'/>
+                        //     <c:forEach items="${sessionScope.addressesInSession}" var="item">  
+                        //         <c:out value="${sessionScope.address_id}" />
+                        //     </c:forEach>
+                         i++;
                     });
-                    </script>]
+                    </script>
                 </c:forEach>
                 <%--  --%>
                 <script>    
@@ -402,7 +406,7 @@
   })();
 
 </script>
-<script>
+<%-- <script>
 try {
   fetch(new Request("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", { method: 'HEAD', mode: 'no-cors' })).then(function(response) {
     return true;
@@ -415,7 +419,7 @@ try {
 } catch (error) {
   console.log(error);
 }
-</script>
+</script> --%>
 <%-- Validating form with the function --%>
 <script>
 		function validateform() {
@@ -470,12 +474,13 @@ try {
 			}
             
 		}
-        var count =0;
+        var count =1;
 	</script>
     <script>
-    
+
                 
             // $('body').on('click', '#add-more', function () {
+            //     alert("Count:"+ count);
             //     count++;
                 
             // });
@@ -485,7 +490,7 @@ try {
     // }
     function checkAddress() {
         var temp=0;
-        alert(count);
+        // alert(count);
         for(var i = 0;i<count;i++){
             
             var addressLineOne = $("#address_line_one_"+i).val();
@@ -501,7 +506,7 @@ try {
                 //      $("#add-more").click(function(){return false;});
                      document.getElementById("add-more").disabled=true;
                     temp++;
-                        alert("no address field should be empty");
+                        // alert("no address field should be empty");
                         return false;
                 }
                      document.getElementById("add-more").disabled=false;

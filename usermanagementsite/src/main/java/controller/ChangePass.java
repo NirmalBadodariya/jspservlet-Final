@@ -44,7 +44,7 @@ public class ChangePass extends HttpServlet {
         forgotPass.setNewPass(newPass);
         forgotPass.setDob(dob);
         forgotPass.setSecurityAns(securityAns);
-
+                
         Userdao.setNewPass(forgotPass);
 
         response.sendRedirect("index.jsp");

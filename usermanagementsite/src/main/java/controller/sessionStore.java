@@ -16,8 +16,10 @@ public class sessionStore  extends HttpServlet {
     throws ServletException, IOException {
         String email =  request.getParameter("email");
         System.out.println("in session store"+email);
+        String fromAdmin = "FromAdmin";
         
        HttpSession session = request.getSession(); 
+       session.setAttribute("fromAdmin", fromAdmin);
        session.setAttribute("email",email);
        
     }

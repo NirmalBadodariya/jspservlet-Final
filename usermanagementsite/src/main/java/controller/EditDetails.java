@@ -38,23 +38,15 @@ public class EditDetails extends HttpServlet {
             HttpSession session = request.getSession();
             UserBean detailsOfUsers;
             ArrayList<AddressBean> addresses;
-            // if(session.getAttribute("email") == ""){
-            //     System.out.println("came from admin");
-            //     String email = request.getParameter("email");
-            //     detailsOfUsers = Userdao.getUserDetails(email);
-            //      addresses = detailsOfUsers.getAddresses();
-            // }
-            // else{
                 System.out.println("came from user");
                 
             String email = (String) session.getAttribute("email");
+            // String fromAdimn = (String) session.getAttribute("fromAdmin");
+            
             System.out.println("mail: "+ email);
             detailsOfUsers = Userdao.getUserDetails(email);
             addresses = detailsOfUsers.getAddresses();
-            // }
-            // for(int i=0;i<addresses.size();i++){
-            //     System.out.println(i+" , "+addresses.get(i).getAddressId());
-            // }    
+             
             request.setAttribute("detailsofUser", detailsOfUsers);
             request.setAttribute("addresses", addresses);
             session.setAttribute("UserOldAddresses", addresses);

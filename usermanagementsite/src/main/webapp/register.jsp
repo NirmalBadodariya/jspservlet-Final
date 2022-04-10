@@ -53,6 +53,8 @@
             transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
         }
         </style>
+	<%-- <c:import url="./header.jsp"/> --%>
+
 </head>
 
             <c:set var="user" scope="session" value="${requestScope.detailsofUser}"/> 
@@ -66,6 +68,7 @@
                     <h2 class="title">User Registration form</h2>
                 </div>
                 
+                <h1 style="text-align:center"><c:out value="${errMsg}"/></h1>
                 <div class="card-body">
                     <form action="Signup" method="POST" enctype="multipart/form-data" onsubmit="return validateform()">
                         <div class="form-row m-b-55">
@@ -107,7 +110,6 @@
                             <div class="name">Phone</div>
                             <div class="value">
                                 <div class="row row-refine">
-                                    
                                     <div class="col-9">
                                         <div class="input-group-desc">
                                             <input class="input--style-5" type="number" name="phone" id="phone" value="<c:out value="${user.getPhone()}"/>">
@@ -120,7 +122,7 @@
                         
                         <div class="form-row p-t-20">
                             <div class="name">Gender</div>
-                            Male:<input type="radio" name="gender" checked value="M" id="Gmale">
+                            Male:<input type="radio" name="gender"  value="M" id="Gmale">
                            Female:<input type="radio" name="gender" value="F" id="Gfemale">
                         </div>
                         <div class="form-row m-b-55">
@@ -151,7 +153,7 @@
                             </div>
                         </div>
 
-
+                                            
                         <div class="form-row m-b-55">
                             <div class="name">Profile image</div>
                             <div class="value">
@@ -194,7 +196,7 @@
                 <div id="main-container">
                     
                     <div class="panel card container-item">
-                    
+
                         <%-- value="<c:out value="${addresses.get(0).getAddressLine2()}"/>" --%>
                         <div class="panel-body">
                             <div class="panel-body">
@@ -266,17 +268,16 @@
                                 </div>
                             </div>
                         </div>
-                    
+
                     </div>
                 </div>
                 <div class="card">
                     <div>
-                        <a type="button" class="btn btn-success btn-sm" id="add-more" onclick="return checkAddress()"  role="button"><i class="fa fa-plus"></i> Add more address</a>
+                       <div > <a type="button" class="btn btn-success btn-sm" id="add-more" onclick="return checkAddress()"   role="button"><i class="fa fa-plus"></i> Add more address</a></div>
+                       <div id="add-more-hidden" class="d-none"> <div type="button" class="btn btn-success btn-sm" ><i class="fa fa-plus"></i> Add more address</div></div>
                         <input type="submit" class="btn btn-primary btn-sm" value="Submit">
                     </div>
-                    
                 </div>
-                
             </form>
             
         </div>
@@ -286,16 +287,11 @@
 				</th> 
                     </form>
                     
-					
-        
                 </div>
             </div>
         </div>
     </div>  
 	
-
-    
-
     
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -308,13 +304,21 @@
 <script src="./js/cloneData.js" type="text/javascript"></script>
                 <script>var i =0;
                     // document.getElementById("id").value = "<c:out value="${user.getId()}"/>";
-                    
+
                 </script>
                 <c:forEach items="${requestScope.addresses}" var="address">
                     <script>
-                    
+
                 jQuery(function(){ 
                             
+                        <c:if test="{address.getGender()== M }" >
+                        document.getElementById("Gmale").checked = true;
+                        </c:if>
+                        <c:if test="{address.getGender()== F }" >
+                          document.getElementById("Gfemale").checked = true;
+
+                        </c:if>
+                            // document.getElementById("email").disabled = true;
                             if(i+1<${fn:length(addresses)}){
                                  jQuery('#add-more').trigger('click');
                             } 
@@ -325,13 +329,7 @@
                             document.getElementById("city_"+i).value = "<c:out value="${address.getCity()}"/>";
                             document.getElementById("state_"+i).value = "<c:out value="${address.getState()}"/>";
                             document.getElementById("pincode_"+i).value = "<c:out value="${address.getPincode()}"/>";
-                            // <c:set var="para" value="${41+1}" scope="session"  />
-                        
-                        //     <jsp:useBean id="addressesInSession" class="java.util.ArrayList" scope="session"/>
-                        //     <c:set var="address_id" target="${sessionScope.addressesInSession}" value='${address.getAddressId()}'/>
-                        //     <c:forEach items="${sessionScope.addressesInSession}" var="item">  
-                        //         <c:out value="${sessionScope.address_id}" />
-                        //     </c:forEach>
+                       
                          i++;
                     });
                     </script>
@@ -377,7 +375,7 @@
     });*/
     
     $(document).ready(function () {
-        $('.datepicker').datepicker();
+        $('#_startDatePicker').datepicker({minDate: 0, maxDate: '1y'});
     });
 
     // Replace the <textarea id="editor1"> with a CKEditor
@@ -439,7 +437,7 @@ try {
             // var addressLineOne = $("#address_line_one_0").val();
             // var addressLineTwo = $("#address_line_two_0").val();
             // var pincode = $("#pincode_0").val();
-            
+
 
 			if ( lname != "" && email != "" && phone !="" && genderselect.length > 0 && dob != "" && pass != "" && securityans != "") {
                 if ( lname.length>10) {
@@ -478,12 +476,11 @@ try {
 	</script>
     <script>
 
-                
-            // $('body').on('click', '#add-more', function () {
-            //     alert("Count:"+ count);
-            //     count++;
-                
-            // });
+            
+            $('body').on('click', '#add-more', function (e) {
+                 count++;
+                    
+            });
 
     // for(var j=0;j<count;j++){
     // $(document).on('keyup', '#address_line_one_'+j, checkAddress());
@@ -501,18 +498,18 @@ try {
             //     alert("wasd);
             // }
              while(addressLineOne=="" || addressLineTwo=="" || pincode==""){
+
                 //  alert(document.getElementById("add-more").innerHTML);
+                        document.getElementById('add-more-hidden').classList.remove('d-none');
+                        document.getElementById('add-more').classList.add('d-none');
                         
                 //      $("#add-more").click(function(){return false;});
-                     document.getElementById("add-more").disabled=true;
+                    //  document.getElementById("add-more").disabled=true;
                     temp++;
-                        // alert("no address field should be empty");
+                        alert("no address field should be empty");
                         return false;
-                }
-                     document.getElementById("add-more").disabled=false;
+             }
                      
-                    
-                
         }
         if(temp==0){
 
@@ -523,6 +520,9 @@ try {
         
     }
     </script>
+    <%-- <footer>
+	<jsp:include page="footer.jsp" />
+	</footer> --%>
 </body>
 
 </html>

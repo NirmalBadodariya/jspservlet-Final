@@ -27,14 +27,14 @@ public class Login extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Userdao Userdao;
     private LoginService loginService;
-    
-    public void init() {
 
+    public void init() {
+        
         BasicConfigurator.configure();
         loginService = new LoginService();
 
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -50,7 +50,7 @@ public class Login extends HttpServlet {
         session.setAttribute("email", email);
                 
         String usertype = loginService.checkUser(newUser);
-                
+
         if (usertype == "User") {
             response.sendRedirect("home.jsp");
             

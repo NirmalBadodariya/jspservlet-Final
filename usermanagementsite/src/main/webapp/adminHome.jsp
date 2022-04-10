@@ -64,8 +64,11 @@ function EditUserDetails(email) {
 
 </head>
 <body>
+   <button id="AdminProfile" class="btn btn-info"><a href="EditDetails">Profile</a></button>
    <button id="showUserDetails" class="btn btn-info">showUserDetails</button>
    <button id="addUser" class="btn btn-info"><a href="register.jsp">AddNewUser</a></button>
+   <button id="Logout" class="btn btn-danger"><a href="index.jsp">Logout</a></button>
+   
     <div id="tablediv">
 <table cellspacing="0" id="showData"> 
     <thead> 

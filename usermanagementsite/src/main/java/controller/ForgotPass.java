@@ -15,14 +15,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.UserBean;
+import service.ForgotPassService;
 
 @WebServlet("/ForgotPass")
 public class ForgotPass extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private dao.Userdao Userdao;
+    private ForgotPassService ForgotPassService;
   Logger log = Logger.getLogger(Userdao.class.getName());
     public void init() {
         Userdao = new dao.Userdao();
+        ForgotPassService = new ForgotPassService();
         BasicConfigurator.configure();
     }
 
@@ -38,12 +41,12 @@ public class ForgotPass extends HttpServlet {
         PrintWriter out = response.getWriter();
         String dob = request.getParameter("dob");
         String securityAns = request.getParameter("SecurityAns");
-                                                                    
+                
         UserBean checkForgotpassDetails = new UserBean();
         checkForgotpassDetails.setDob(dob);
         checkForgotpassDetails.setSecurityAns(securityAns);
 
-        boolean check = Userdao.checkUserDetailsForForgotPass(checkForgotpassDetails);
+        boolean check = ForgotPassService.checkUserDetailsForForgotPass(checkForgotpassDetails);
                 
         if (check == true) {
             HttpSession session = request.getSession();

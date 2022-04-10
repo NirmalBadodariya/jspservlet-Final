@@ -12,7 +12,7 @@ import daoInterface.AdminDaoInterface;
 import model.UserBean;
 
 public class AdminDao extends DBConnection implements AdminDaoInterface {
-    Logger log = Logger.getLogger(Userdao.class.getName());
+    Logger log = Logger.getLogger(AdminDao.class.getName());
 
     public void init() {
 
@@ -27,9 +27,8 @@ public class AdminDao extends DBConnection implements AdminDaoInterface {
 
             Connection connection = getDBConnection();
             if (connection != null) {
-
+                
                 PreparedStatement preparedStatement = connection.prepareStatement(userDetailsQuery);
-
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
@@ -40,7 +39,7 @@ public class AdminDao extends DBConnection implements AdminDaoInterface {
                     user.setEmail(rs.getString(3));
                     userDetails.add(user);
                 }
-                
+
                 return userDetails;
             } else {
                 log.error("Connection is null");

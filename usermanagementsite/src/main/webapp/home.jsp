@@ -24,7 +24,7 @@
 		rd.forward(request, response);
 	}
 	%>
-
+	
 	<form action="EditDetails">
 	<button class="btn btn-info">Profile</button>
 	</form>

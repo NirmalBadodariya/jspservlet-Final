@@ -129,7 +129,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
     public boolean checkUserDetailsForForgotPass(UserBean checkForgotpassDetails) {
         boolean check = false;
         try {
-
+            
             Connection connection = getDBConnection();
             if (connection != null) {
                 PreparedStatement preparedStatement = connection.prepareStatement(checkforgotPassDetails);
@@ -162,7 +162,11 @@ public class Userdao extends DBConnection implements UserdaoInterface {
             Connection connection = getDBConnection();
             if (connection != null) {
                 PreparedStatement preparedStatement = connection.prepareStatement(changePass);
-                preparedStatement.setString(1, forgotPass.getNewPass());
+
+                final String secretKey = "ssshhhhhhhhhhh!!!!";
+                String encryptedString = AES.encrypt(forgotPass.getNewPass(), secretKey);
+                log.info("encrypted:"+encryptedString);
+                preparedStatement.setString(1, encryptedString);
                 preparedStatement.setString(2, forgotPass.getDob());
                 preparedStatement.setString(3, forgotPass.getSecurityAns());
                 preparedStatement.executeUpdate();
@@ -182,7 +186,6 @@ public class Userdao extends DBConnection implements UserdaoInterface {
         
         ArrayList<AddressBean> addresses = new ArrayList<>();
         UserBean user = new UserBean();
-        InputStream in=null;
         try {
             
             Connection connection = getDBConnection();
@@ -200,13 +203,13 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 user.setPhone(rs.getString(5));
                 user.setGender(rs.getString(6));
                 user.setDob(rs.getString(7));
-                 user.setPass(rs.getString(8));
+                //  user.setPass(rs.getString(8));
                 user.setSecurityAns(rs.getString(9));
                 Blob blob = rs.getBlob(10);
-                //   final String secretKey = "ssshhhhhhhhhhh!!!!";
-                // String decryptedPass = AES.decrypt(rs.getString(8), secretKey);
-                // log.info("decrypted   :"+decryptedPass);
-                // user.setPass(decryptedPass);
+                  final String secretKey = "ssshhhhhhhhhhh!!!!";
+                String decryptedPass = AES.decrypt(rs.getString(8), secretKey);
+                log.info("decrypted   :"+decryptedPass);
+                user.setPass(decryptedPass);
                 InputStream inputStream = blob.getBinaryStream();
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 byte[] buffer = new byte[4096];
@@ -398,11 +401,6 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                     preparedStatement1.setString(5, addresses.get(i).getState());
                     preparedStatement1.setInt(6, hiddenId);
                     preparedStatement1.setInt(7, addresses.get(i).getAddressId());
-                    preparedStatement1.setString(8, addresses.get(i).getAddressLine1());
-                    preparedStatement1.setString(9, addresses.get(i).getAddressLine2());
-                    preparedStatement1.setString(10, addresses.get(i).getCity());
-                    preparedStatement1.setInt(11, addresses.get(i).getPincode());
-                    preparedStatement1.setString(12, addresses.get(i).getState());
                   int a =  preparedStatement1.executeUpdate();
                   System.out.println("as"+ a);
                 }

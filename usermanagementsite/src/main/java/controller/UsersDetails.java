@@ -24,7 +24,7 @@ public class UsersDetails extends HttpServlet {
     Logger log = Logger.getLogger(UsersDetails.class.getName());
     private static final long serialVersionUID = 1L;
     private UserDetailsService userDetailsService;
-
+    
     public void init() {
 
         BasicConfigurator.configure();

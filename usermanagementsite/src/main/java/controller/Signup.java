@@ -102,25 +102,16 @@ public class Signup extends HttpServlet {
 
                 temp = request.getParameter("Address[" + i + "][address_id]");
             }
-            // if(temp!=null){
-            // addressId = Integer.parseInt(request.getParameter("Address[" + i +
-            // "][address_id]"));
-            // }
+            
             try {
-
-                // if (request.getParameter("Address[" + i + "][address_id]")!=null &&
-                // !request.getParameter("Address[" + i + "][address_id]").isEmpty()) {
                 addressId = Integer.parseInt(temp);
                 System.out.println("temp not null");
                 currentUserAddressIdList.add(addressId);
-                // currentUserAddressIdList.add(addressId);
+                
 
             } catch (Exception e) {
 
             }
-            // else{
-            // addressId = -1;
-            // }
             System.out.println(addressId);
             if (addressId == -1) {
                 newAddresses.add(new AddressBean(addressId, ALine1, ALine2, city, state, pin));

@@ -1,12 +1,11 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.Serializable;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-import dao.Userdao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,27 +13,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.ForgotPassBean;
-
+import service.ChangePassService;
 @WebServlet("/ChangePass")
 public class ChangePass extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private dao.Userdao Userdao;
-    Logger log = Logger.getLogger(Userdao.class.getName());
+    private transient ChangePassService ChangePassService;
+    Logger log = Logger.getLogger(ChangePass.class.getName());
     public void init() {
-        Userdao = new dao.Userdao();
+        ChangePassService = new ChangePassService();
         BasicConfigurator.configure();
     }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PrintWriter out = response.getWriter();
 
         ForgotPassBean forgotPass = new ForgotPassBean();
         String newPass = request.getParameter("newPass");
@@ -45,7 +38,8 @@ public class ChangePass extends HttpServlet {
         forgotPass.setDob(dob);
         forgotPass.setSecurityAns(securityAns);
                 
-        Userdao.setNewPass(forgotPass);
+        ChangePassService.setNewPass(forgotPass);
+        // Userdao.setNewPass(forgotPass);
 
         response.sendRedirect("index.jsp");
 

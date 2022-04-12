@@ -9,8 +9,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/sessionStore")
-public class sessionStore  extends HttpServlet {
+@WebServlet("/SessionStore")
+public class SessionStore  extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        String fromAdmin = "FromAdmin";
+        
+       HttpSession session = request.getSession(); 
+       session.setAttribute("fromAdmin", fromAdmin);
+       response.sendRedirect("register.jsp");
+    }
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -19,8 +29,9 @@ public class sessionStore  extends HttpServlet {
         String fromAdmin = "FromAdmin";
         
        HttpSession session = request.getSession(); 
-       session.setAttribute("fromAdmin", fromAdmin);
        session.setAttribute("email",email);
+       session.setAttribute("fromAdmin", fromAdmin);
+       response.sendRedirect("register.jsp");
        
     }
 }

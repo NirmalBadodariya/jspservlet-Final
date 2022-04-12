@@ -8,10 +8,10 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.annotation.WebFilter;
+// import jakarta.servlet.annotation.WebFilter;
 
 // @WebFilter("/Login")
-public class loginFilter implements Filter {
+public class LoginFilter implements Filter {
     
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

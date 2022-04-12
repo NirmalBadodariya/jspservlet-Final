@@ -2,14 +2,12 @@ package controller;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,6 +19,7 @@ import jakarta.servlet.http.Part;
 import model.AddressBean;
 import model.UserBean;
 import service.SignupService;
+import service.UserDataManipultionService;
 
 /**
  * Servlet implementation class signup
@@ -32,12 +31,15 @@ public class Signup extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private dao.Userdao Userdao;
     private SignupService signupService;
-    Logger log = Logger.getLogger(Signup.class.getName());
+    private UserDataManipultionService UserDataManipultionService;
+
+   static final Logger log = Logger.getLogger(Signup.class.getName());
 
     public void init() {
         Userdao = new dao.Userdao();
 
         signupService = new SignupService();
+        UserDataManipultionService = new UserDataManipultionService();
         BasicConfigurator.configure();
 
     }
@@ -45,7 +47,6 @@ public class Signup extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ArrayList<String> errors = new ArrayList<>();
         Part filePart = request.getPart("image");
         String firstName = request.getParameter("firstname");
         // if (firstName.equals("")) {
@@ -59,7 +60,7 @@ public class Signup extends HttpServlet {
 
             hiddenId = Integer.parseInt(request.getParameter("id"));
         } catch (Exception e) {
-            // TODO: handle exception
+            log.error("Exc:"+e);
         }
         String lastName = request.getParameter("lastname");
         String email = request.getParameter("email");
@@ -69,27 +70,21 @@ public class Signup extends HttpServlet {
         String pass = request.getParameter("pass");
         InputStream image = filePart.getInputStream();
         String securityAns = request.getParameter("SecurityAns");
-        int i = 0;
         ArrayList<AddressBean> addresses = new ArrayList<>();
         ArrayList<AddressBean> newAddresses = new ArrayList<>();
         List<Integer> currentUserAddressIdList = new ArrayList<>();
 
         HttpSession session = request.getSession();
-        // for(int j =0;j<addressIdList.size();j++){
-        // System.out.println("List: "+addressIdList.get(j));
-        // }
+
         ArrayList<AddressBean> oldAddresses = (ArrayList<AddressBean>) session.getAttribute("UserOldAddresses");
-        // for(AddressBean obj : oldAddresses)
-        // { System.out.println(obj.getAddressLine1()); }
+        int i = 0;
+
         while (true) {
             int addressId = -1;
             String ALine1 = request.getParameter("Address[" + i + "][address_line1]");
             if (ALine1 == null) {
                 break;
             }
-
-            // System.out.println(request.getParameter(("Address[" + i
-            // +"][address_id]")).equals(""));
 
             String ALine2 = request.getParameter("Address[" + i + "][address_line2]");
             String city = request.getParameter("Address[" + i + "][city]");
@@ -102,30 +97,27 @@ public class Signup extends HttpServlet {
 
                 temp = request.getParameter("Address[" + i + "][address_id]");
             }
-            
+
             try {
                 addressId = Integer.parseInt(temp);
-                System.out.println("temp not null");
+
                 currentUserAddressIdList.add(addressId);
-                
 
             } catch (Exception e) {
-
+                log.error("Exc:"+e);
             }
             System.out.println(addressId);
             if (addressId == -1) {
                 newAddresses.add(new AddressBean(addressId, ALine1, ALine2, city, state, pin));
-                System.out.println("came if -1");
-            } else {
-                System.out.println("came else");
-                for (AddressBean obj : oldAddresses) {
-                    if ((obj.getAddressId() == addressId && obj.getAddressLine1().equals(ALine1)
-                            && obj.getAddressLine2().equals(ALine2) && obj.getCity().equals(city)
-                            && obj.getState().equals(state) && obj.getPincode() == pin)) {
 
-                    } else {
+            } else {
+
+                for (AddressBean obj : oldAddresses) {
+                    if (obj.getAddressId() != addressId || !(obj.getAddressLine1().equals(ALine1))
+                    || !(obj.getAddressLine2().equals(ALine2)) || !(obj.getCity().equals(city))
+                    || !(obj.getState().equals(state)) || !(obj.getPincode() == pin)) {
                         addresses.add(new AddressBean(addressId, ALine1, ALine2, city, state, pin));
-                    }
+                    } 
                 }
 
             }
@@ -145,29 +137,36 @@ public class Signup extends HttpServlet {
         newUser.setSecurityAns(securityAns);
 
         if (hiddenId == 0) {
+            // setting data of newuser in database
             newUser.setAddresses(newAddresses);
             String id = signupService.insertUser(newUser);
-            System.out.println("newuser deails");
-            // response.sendRedirect("home.jsp");
+            log.info("newUser Details");
 
             if (id != null) {
-             
-            // session.setAttribute("id", id);
-            session.setAttribute("email", newUser.getEmail());
-            // session.setAttribute("firstName", newUser.getFirstName());
-            // session.setAttribute("lastName", newUser.getLastName());
-            // session.setAttribute("pass", newUser.getPass());
-            // session.setAttribute("phone", newUser.getPhone());
-            response.sendRedirect("home.jsp");
+                // setting email for getting data while update
+                String FromAdmin = (String) session.getAttribute("fromAdmin");
+                if(FromAdmin!=null){
+                    
+                    response.sendRedirect("adminHome1.jsp");
+                }
+                else{
+                    session.setAttribute("email", newUser.getEmail());
+                    response.sendRedirect("home.jsp");
+                }
             }
         } else {
+            session.setAttribute("email", newUser.getEmail());
+            // if its not nwe user it comes here
             List<Integer> addressIdList = new ArrayList<>();
 
-            Userdao.UpdateNewUserDetails(newUser);
+            // updating user's Basic data to db
+            UserDataManipultionService.updateNewUserDetails(newUser);
+
             // adding new addresses to db
-            Userdao.addnewAddress(newAddresses, hiddenId);
+            UserDataManipultionService.addnewAddress(newAddresses, hiddenId);
+
             // updating addresses to db
-            Userdao.updateaddress(addresses, hiddenId);
+            UserDataManipultionService.updateaddress(addresses, hiddenId);
             // Deleted ids from user addresses
             for (AddressBean obj : oldAddresses) {
                 addressIdList.add(obj.getAddressId());
@@ -180,20 +179,15 @@ public class Signup extends HttpServlet {
             }
 
             Userdao.removeAddresses(addressIdList);
+            // who is editing
             String FromAdmin = (String) session.getAttribute("fromAdmin");
-            if(FromAdmin!=null){
-                response.sendRedirect("adminHome.jsp");
-            }
-            else{
-            response.sendRedirect("home.jsp");
+            if (FromAdmin != null) {
+                response.sendRedirect("adminHome1.jsp");
+            } else {
+                response.sendRedirect("home.jsp");
             }
         }
 
     }
 
-    @Override
-    public void destroy() {
-        // TODO Auto-generated method stub
-        super.destroy();
-    }
 }

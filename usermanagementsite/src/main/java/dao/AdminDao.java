@@ -23,16 +23,18 @@ public class AdminDao extends DBConnection implements AdminDaoInterface {
     // getting user details to show in datatable to admin.
     public ArrayList<UserBean> getUserDetails() {
         ArrayList<UserBean> userDetails = new ArrayList<>();
+        Connection connection = getDBConnection();
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
         try {
 
-            Connection connection = getDBConnection();
             if (connection != null) {
-                
-                PreparedStatement preparedStatement = connection.prepareStatement(userDetailsQuery);
-                ResultSet rs = preparedStatement.executeQuery();
+
+                preparedStatement = connection.prepareStatement(userDetailsQuery);
+                rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
-                    
+
                     UserBean user = new UserBean();
                     user.setId(rs.getInt(1));
                     user.setFirstName(rs.getString(2));
@@ -47,19 +49,31 @@ public class AdminDao extends DBConnection implements AdminDaoInterface {
         } catch (Exception e) {
             log.error("Exception:" + e);
 
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+                log.error("Excs:" + e);
+            }
         }
         return null;
-        
+
     }
 
     // deleting of user by admin.
     public void deleteUser(int userId) {
+        PreparedStatement preparedStatement = null;
         try {
 
             Connection connection = getDBConnection();
             if (connection != null) {
-                String deleteUserQUery1 = "DELETE FROM users where id="+userId;
-                PreparedStatement preparedStatement = connection.prepareStatement(deleteUserQUery1);
+                String deleteUserQUery1 = "DELETE FROM users where id=" + userId;
+                 preparedStatement = connection.prepareStatement(deleteUserQUery1);
                 preparedStatement.executeUpdate();
 
             } else {
@@ -68,6 +82,15 @@ public class AdminDao extends DBConnection implements AdminDaoInterface {
         } catch (Exception e) {
             log.error("Exception:" + e);
 
+        }
+        finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+            } catch (Exception e) {
+                log.error("Excs:" + e);
+            }
         }
 
     }

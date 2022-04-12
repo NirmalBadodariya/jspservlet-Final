@@ -68,7 +68,7 @@
                     <h2 class="title">User Registration form</h2>
                 </div>
                 
-                <h1 style="text-align:center"><c:out value="${errMsg}"/></h1>
+                <p style="text-align:center"><c:out value="${errMsg}"/></p>
                 <div class="card-body">
                     <form action="Signup" method="POST" enctype="multipart/form-data" onsubmit="return validateform()">
                         <div class="form-row m-b-55">
@@ -97,7 +97,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="form-row">
                             <div class="name">Email</div>
                             <div class="value">
@@ -122,7 +122,7 @@
                         
                         <div class="form-row p-t-20">
                             <div class="name">Gender</div>
-                            Male:<input type="radio" name="gender"  value="M" id="Gmale">
+                            Male:<input type="radio" name="gender" checked value="M" id="Gmale">
                            Female:<input type="radio" name="gender" value="F" id="Gfemale">
                         </div>
                         <div class="form-row m-b-55">
@@ -275,7 +275,7 @@
                     <div>
                        <div > <a type="button" class="btn btn-success btn-sm" id="add-more" onclick="return checkAddress()"   role="button"><i class="fa fa-plus"></i> Add more address</a></div>
                        <div id="add-more-hidden" class="d-none"> <div type="button" class="btn btn-success btn-sm" ><i class="fa fa-plus"></i> Add more address</div></div>
-                        <input type="submit" class="btn btn-primary btn-sm" value="Submit">
+                        <input type="submit" id="btn-submit" class="btn btn-primary btn-sm" value="Submit">
                     </div>
                 </div>
             </form>
@@ -292,8 +292,6 @@
         </div>
     </div>  
 	
-    
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -302,7 +300,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.js"></script>
 <script src="https://cdn.ckeditor.com/4.5.1/standard/ckeditor.js"></script>
 <script src="./js/cloneData.js" type="text/javascript"></script>
+
+        
                 <script>var i =0;
+//                $("#btn-submit").click(function(e){
+//                    $.post("CheckValidPass", {
+//                         "userId" : email
+//                     }, function() {
+//                         window.location.reload();
+//                         ('#showUserDetails').click();
+//                     }
+// );  
+//                })
+                 
+                    
+//             });
                     // document.getElementById("id").value = "<c:out value="${user.getId()}"/>";
 
                 </script>
@@ -476,7 +488,7 @@ try {
 	</script>
     <script>
 
-
+            
             $('body').on('click', '#add-more', function (e) {
                  count++;
                     
@@ -485,7 +497,7 @@ try {
     // for(var j=0;j<count;j++){
     // $(document).on('keyup', '#address_line_one_'+j, checkAddress());
     // }
-    function checkAddress() {
+    function checkAddress() {`
         var temp=0;
         // alert(count);
         for(var i = 0;i<count;i++){
@@ -498,10 +510,11 @@ try {
             //     alert("wasd);
             // }
              while(addressLineOne=="" || addressLineTwo=="" || pincode==""){
+
                 //  alert(document.getElementById("add-more").innerHTML);
                         document.getElementById('add-more-hidden').classList.remove('d-none');
                         document.getElementById('add-more').classList.add('d-none');
-                        
+                         
                 //      $("#add-more").click(function(){return false;});
                     //  document.getElementById("add-more").disabled=true;
                     temp++;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-import dao.Userdao;
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,16 +16,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.AddressBean;
 import model.UserBean;
-import service.SignupService;
-
+import service.GetUserDetails;
 @WebServlet("/EditDetails")
 public class EditDetails extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private dao.Userdao Userdao;
-    private SignupService signupService;
+    private GetUserDetails GetUserDetails;
     Logger log = Logger.getLogger(EditDetails.class.getName());
     public void init() {
-        Userdao = new dao.Userdao();
+        GetUserDetails = new GetUserDetails();
+        
         BasicConfigurator.configure();
     }
     
@@ -38,13 +37,13 @@ public class EditDetails extends HttpServlet {
             HttpSession session = request.getSession();
             UserBean detailsOfUsers;
             ArrayList<AddressBean> addresses;
-                System.out.println("came from user");
                 
             String email = (String) session.getAttribute("email");
-            // String fromAdimn = (String) session.getAttribute("fromAdmin");
             
             System.out.println("mail: "+ email);
-            detailsOfUsers = Userdao.getUserDetails(email);
+            
+            detailsOfUsers = GetUserDetails.getUserDetails(email);
+            // detailsOfUsers = Userdao.getUserDetails(email);
             addresses = detailsOfUsers.getAddresses();
              
             request.setAttribute("detailsofUser", detailsOfUsers);

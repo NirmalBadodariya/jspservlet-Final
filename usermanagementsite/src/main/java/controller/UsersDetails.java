@@ -1,16 +1,16 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+
 import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.JsonAdapter;
+
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-import dao.Userdao;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

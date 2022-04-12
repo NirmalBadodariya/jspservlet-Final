@@ -2,7 +2,6 @@ package controller;
 
 import java.io.IOException;
 
-import java.io.PrintWriter;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -16,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.UserBean;
 import service.LoginService;
-import dao.Userdao;
+
 
 /**
  * Servlet implementation class Login
@@ -25,7 +24,6 @@ import dao.Userdao;
 public class Login extends HttpServlet {
     Logger log = Logger.getLogger(Login.class.getName());
     private static final long serialVersionUID = 1L;
-    private Userdao Userdao;
     private LoginService loginService;
 
     public void init() {
@@ -48,14 +46,14 @@ public class Login extends HttpServlet {
         newUser.setPass(pass);
         HttpSession session = request.getSession();
         session.setAttribute("email", email);
-                
+        System.out.println("session mail:"+ email);        
         String usertype = loginService.checkUser(newUser);
 
         if (usertype == "User") {
             response.sendRedirect("home.jsp");
             
         } else if (usertype == "Admin") {
-            response.sendRedirect("adminHome.jsp");
+            response.sendRedirect("adminHome1.jsp");
         } else {
             request.setAttribute("error","Invalid email or Password");
             RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
@@ -64,9 +62,5 @@ public class Login extends HttpServlet {
         
     }
 
-    @Override
-    public void destroy() {
-        // TODO Auto-generated method stub
-        super.destroy();
-    }
+    
 }

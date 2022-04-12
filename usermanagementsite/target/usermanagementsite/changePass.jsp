@@ -74,4 +74,4 @@
             <input type="text" name="newPass" placeholder="new password">
             <input type="submit" value="submit">
         </form> --%>
-        
+      

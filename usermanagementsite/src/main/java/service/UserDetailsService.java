@@ -4,14 +4,13 @@ import java.util.ArrayList;
 
 import dao.AdminDao;
 import model.UserBean;
-
 public class UserDetailsService {
 
-    private dao.AdminDao AdminDao;
+    private AdminDao AdminDao;
 
     public ArrayList<UserBean> getUserDetails() {
 
-        AdminDao = new dao.AdminDao();
+        AdminDao = new AdminDao();
         ArrayList<UserBean> userDetails = AdminDao.getUserDetails();
         return userDetails;
     }

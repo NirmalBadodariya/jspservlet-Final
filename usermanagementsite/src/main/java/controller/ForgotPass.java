@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-import dao.Userdao;
+
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,11 +20,9 @@ import service.ForgotPassService;
 @WebServlet("/ForgotPass")
 public class ForgotPass extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private dao.Userdao Userdao;
     private ForgotPassService ForgotPassService;
-  Logger log = Logger.getLogger(Userdao.class.getName());
+  Logger log = Logger.getLogger(ForgotPass.class.getName());
     public void init() {
-        Userdao = new dao.Userdao();
         ForgotPassService = new ForgotPassService();
         BasicConfigurator.configure();
     }

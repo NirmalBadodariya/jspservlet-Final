@@ -1,5 +1,6 @@
 package controller;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -45,7 +46,7 @@ public class AES {
       Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
       cipher.init(Cipher.DECRYPT_MODE, secretKey);
       return new String(cipher.doFinal(Base64.getDecoder()
-        .decode(strToDecrypt)));
+        .decode(strToDecrypt)), StandardCharsets.UTF_8);
     } catch (Exception e) {
       System.out.println("Error while decrypting: " + e.toString());
     }

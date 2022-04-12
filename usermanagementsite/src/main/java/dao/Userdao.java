@@ -25,11 +25,11 @@ public class Userdao extends DBConnection implements UserdaoInterface {
     public void init() {
 
         BasicConfigurator.configure();
-        
+
     }
-            
+
     public String insertUser(UserBean user) {
-        PreparedStatement preparedStatement  = null;
+        PreparedStatement preparedStatement = null;
         PreparedStatement ps = null;
         PreparedStatement preparedStatement1 = null;
         try {
@@ -37,7 +37,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
             Connection connection = getDBConnection();
             if (connection != null) {
                 // adding data to users table.
-                 preparedStatement = connection.prepareStatement(insert_users,
+                preparedStatement = connection.prepareStatement(insert_users,
                         Statement.RETURN_GENERATED_KEYS);
                 preparedStatement.setString(1, user.getFirstName());
                 preparedStatement.setString(2, user.getLastName());
@@ -50,7 +50,7 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 preparedStatement.setBlob(9, user.getImage());
                 final String secretKey = "ssshhhhhhhhhhh!!!!";
                 String encryptedString = AES.encrypt(user.getPass(), secretKey);
-                log.info("encrypted:"+encryptedString);
+                log.info("encrypted:" + encryptedString);
                 preparedStatement.setString(7, encryptedString);
                 preparedStatement.executeUpdate();
                 ResultSet res = preparedStatement.getGeneratedKeys();
@@ -58,17 +58,17 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 String id = res.getString(1);
 
                 // storing usertype in roles table.
-                 ps = connection.prepareStatement(setusertype);
+                ps = connection.prepareStatement(setusertype);
                 ps.setString(1, id);
                 ps.setInt(2, 1);
                 ps.executeUpdate();
-                
+
                 // adding data to addresses table
                 for (int i = 0; i < user.getAddresses().size(); i++) {
 
-                     preparedStatement1 = connection.prepareStatement(insert_addresses);
+                    preparedStatement1 = connection.prepareStatement(insert_addresses);
                     preparedStatement1.setString(1, id);
-                    
+
                     preparedStatement1.setString(2, user.getAddresses().get(i).getAddressLine1());
                     preparedStatement1.setString(3, user.getAddresses().get(i).getAddressLine2());
                     preparedStatement1.setString(4, user.getAddresses().get(i).getCity());
@@ -84,15 +84,14 @@ public class Userdao extends DBConnection implements UserdaoInterface {
 
         } catch (Exception e) {
             log.error("Exception:" + e);
-        }
-        finally {
+        } finally {
             try {
-                if (preparedStatement != null) 
+                if (preparedStatement != null)
                     preparedStatement.close();
-                if(ps!=null)
-                ps.close();
-                if(preparedStatement1!=null)
-                preparedStatement1.close();
+                if (ps != null)
+                    ps.close();
+                if (preparedStatement1 != null)
+                    preparedStatement1.close();
             } catch (Exception e) {
                 log.error("Excs:" + e);
             }
@@ -109,14 +108,14 @@ public class Userdao extends DBConnection implements UserdaoInterface {
             Connection connection = getDBConnection();
             if (connection != null) {
 
-                 preparedStatement = connection.prepareStatement(login_credentials);
+                preparedStatement = connection.prepareStatement(login_credentials);
 
                 rs = preparedStatement.executeQuery();
                 // loop through database to find matching email and pass
                 while (rs.next()) {
                     final String secretKey = "ssshhhhhhhhhhh!!!!";
-                String decryptedPass = AES.decrypt(rs.getString("pass"), secretKey);
-                log.info("decrypted:"+decryptedPass);
+                    String decryptedPass = AES.decrypt(rs.getString("pass"), secretKey);
+                    log.info("decrypted:" + decryptedPass);
                     if (rs.getString("email").equals(user.getEmail()) && decryptedPass.equals(user.getPass())
                             && rs.getString(4).equals("1")) {
                         // usertype defines type of user 1 for user.
@@ -136,12 +135,11 @@ public class Userdao extends DBConnection implements UserdaoInterface {
 
         } catch (Exception e) {
             log.error("Exception:" + e);
-        }
-        finally {
+        } finally {
             try {
-                if (preparedStatement != null) 
+                if (preparedStatement != null)
                     preparedStatement.close();
-                if(rs!=null){
+                if (rs != null) {
                     rs.close();
                 }
             } catch (Exception e) {
@@ -159,12 +157,12 @@ public class Userdao extends DBConnection implements UserdaoInterface {
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
         try {
-            
+
             Connection connection = getDBConnection();
             if (connection != null) {
-                 preparedStatement = connection.prepareStatement(checkforgotPassDetails);
+                preparedStatement = connection.prepareStatement(checkforgotPassDetails);
 
-                 rs = preparedStatement.executeQuery();
+                rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
                     if (rs.getString("dob").equals(checkForgotpassDetails.getDob())
@@ -181,12 +179,11 @@ public class Userdao extends DBConnection implements UserdaoInterface {
 
         } catch (Exception e) {
             log.error("Exception:" + e);
-        }
-        finally {
+        } finally {
             try {
-                if (preparedStatement != null) 
+                if (preparedStatement != null)
                     preparedStatement.close();
-                if(rs!=null){
+                if (rs != null) {
                     rs.close();
                 }
             } catch (Exception e) {
@@ -198,15 +195,15 @@ public class Userdao extends DBConnection implements UserdaoInterface {
 
     // updating password of user if he has forgotten it.
     public void setNewPass(ForgotPassBean forgotPass) {
+        PreparedStatement preparedStatement = null;
         try {
-
             Connection connection = getDBConnection();
             if (connection != null) {
-                PreparedStatement preparedStatement = connection.prepareStatement(changePass);
+                preparedStatement = connection.prepareStatement(changePass);
 
                 final String secretKey = "ssshhhhhhhhhhh!!!!";
                 String encryptedString = AES.encrypt(forgotPass.getNewPass(), secretKey);
-                log.info("encrypted:"+encryptedString);
+                log.info("encrypted:" + encryptedString);
                 preparedStatement.setString(1, encryptedString);
                 preparedStatement.setString(2, forgotPass.getDob());
                 preparedStatement.setString(3, forgotPass.getSecurityAns());
@@ -219,22 +216,34 @@ public class Userdao extends DBConnection implements UserdaoInterface {
         } catch (Exception e) {
             log.error("Exception :" + e);
 
+        } finally {
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+
+            } catch (Exception e) {
+                log.error("Excs:" + e);
+            }
         }
     }
 
     // Getting UserDetails to show to user for editing.
     public UserBean getUserDetails(String email) {
-        
+
         ArrayList<AddressBean> addresses = new ArrayList<>();
         UserBean user = new UserBean();
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        PreparedStatement ps1 = null;
+        ResultSet rs1 = null;
         try {
-            
+
             Connection connection = getDBConnection();
             if (connection != null) {
                 String query = "select * from users  where email=?";
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, email);
-                ResultSet rs = preparedStatement.executeQuery();
+                rs = preparedStatement.executeQuery();
                 rs.next();
                 int id = rs.getInt(1);
                 user.setId(rs.getInt(1));
@@ -244,33 +253,33 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                 user.setPhone(rs.getString(5));
                 user.setGender(rs.getString(6));
                 user.setDob(rs.getString(7));
-                //  user.setPass(rs.getString(8));
+                // user.setPass(rs.getString(8));
                 user.setSecurityAns(rs.getString(9));
                 Blob blob = rs.getBlob(10);
-                  final String secretKey = "ssshhhhhhhhhhh!!!!";
+                final String secretKey = "ssshhhhhhhhhhh!!!!";
                 String decryptedPass = AES.decrypt(rs.getString(8), secretKey);
-                
+
                 user.setPass(decryptedPass);
                 InputStream inputStream = blob.getBinaryStream();
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 byte[] buffer = new byte[4096];
                 int bytesRead = -1;
-                 
+
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);                  
+                    outputStream.write(buffer, 0, bytesRead);
                 }
-                 
+
                 byte[] imageBytes = outputStream.toByteArray();
                 String base64Image = Base64.getEncoder().encodeToString(imageBytes);
                 // user.setImage(rs.getBinaryStream(10));
-                    user.setBase64Image(base64Image);
+                user.setBase64Image(base64Image);
 
                 String query1 = "select * from user_addresses  where user_id=?";
-                PreparedStatement ps1 = connection.prepareStatement(query1);
+                ps1 = connection.prepareStatement(query1);
                 ps1.setInt(1, id);
-                ResultSet rs1 = ps1.executeQuery();
+                rs1 = ps1.executeQuery();
 
-                while (rs1.next()) {    
+                while (rs1.next()) {
                     AddressBean addressesOfUsers = new AddressBean();
                     addressesOfUsers.setAddressId(rs1.getInt(1));
                     addressesOfUsers.setAddressLine1(rs1.getString(3));
@@ -279,11 +288,11 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                     addressesOfUsers.setPincode(rs1.getInt(6));
                     addressesOfUsers.setState(rs1.getString(7));
                     addresses.add(addressesOfUsers);
-                }   
+                }
                 user.setAddresses(addresses);
                 // for(int i=0; i<addresses.size();i++){
-                //     System.out.println("in dao firstname:"+addresses.get(i).getAddressId());
-                    
+                // System.out.println("in dao firstname:"+addresses.get(i).getAddressId());
+
                 // }
 
                 return user;
@@ -293,73 +302,118 @@ public class Userdao extends DBConnection implements UserdaoInterface {
         } catch (Exception e) {
             log.error("Exception:" + e);
 
-        }   
+        } finally {
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+            }catch(Exception e){
+                log.error("Exc:"+e);
+            }
+            try {
+                if (rs != null)
+                rs.close();
+            }catch(Exception e){
+                log.error("Exc:"+e);
+            }
+            try {
+                if (rs != null)
+                rs.close();
+            }catch(Exception e){
+                log.error("Exc:"+e);
+            }
+            try {
+                if (ps1 != null)
+                ps1.close();
+            }catch(Exception e){
+                log.error("Exc:"+e);
+            }
+
+        }
         return null;
-                
+
     }
 
     public List<Integer> getAddressId(int hiddenId) {
-        
+        PreparedStatement ps1 = null;
+        ResultSet rs1 = null;
         try {
-            
+
             Connection connection = getDBConnection();
             if (connection != null) {
-                List<Integer> adressIdList = new ArrayList<>(); 
+                List<Integer> adressIdList = new ArrayList<>();
                 String query1 = "select id from user_addresses  where user_id=?";
-                PreparedStatement ps1 = connection.prepareStatement(query1);
+                ps1 = connection.prepareStatement(query1);
                 ps1.setInt(1, hiddenId);
-                ResultSet rs1 = ps1.executeQuery();
-                
+                rs1 = ps1.executeQuery();
+
                 while (rs1.next()) {
                     adressIdList.add(rs1.getInt(1));
                 }
-                        
-                return adressIdList;
-                }
-                else {
-                    log.error("Connection is null");
-                }
 
-                
+                return adressIdList;
+            } else {
+                log.error("Connection is null");
+            }
+
         } catch (Exception e) {
             log.error("Exception:" + e);
 
+        } finally {
+            try {
+                if (ps1 != null)
+                    ps1.close();
+
+                if (rs1 != null)
+                    rs1.close();
+
+            } catch (Exception e) {
+                log.error("Excs:" + e);
+            }
         }
         return null;
     }
 
     public void removeAddresses(List<Integer> addressIdList) {
+        PreparedStatement preparedStatement = null;
         try {
-            
+
             Connection connection = getDBConnection();
             if (connection != null) {
-                for(int i=0;i<addressIdList.size();i++){
+                for (int i = 0; i < addressIdList.size(); i++) {
                     // System.out.println("removed id: "+addressIdList.get(i));
-                String deleteUserAddress = "DELETE FROM user_addresses where id="+addressIdList.get(i);
-                PreparedStatement preparedStatement = connection.prepareStatement(deleteUserAddress);
-                preparedStatement.executeUpdate();
+                    String deleteUserAddress = "DELETE FROM user_addresses where id=" + addressIdList.get(i);
+                    preparedStatement = connection.prepareStatement(deleteUserAddress);
+                    preparedStatement.executeUpdate();
                 }
+            } else {
+                log.error("Connection is null");
             }
-                else {
-                    log.error("Connection is null");
-                }
 
-                
         } catch (Exception e) {
             log.error("Exception:" + e);
 
+        }
+        finally {
+            try {
+                if (preparedStatement != null)
+                preparedStatement.close();
+
+
+            } catch (Exception e) {
+                log.error("Excs:" + e);
+            }
         }
 
     }
 
     public void addnewAddress(ArrayList<AddressBean> newAddresses, int hiddenId) {
-
+        PreparedStatement preparedStatement1 = null;
         try {
-            
+
             Connection connection = getDBConnection();
             if (connection != null) {
                 for (int i = 0; i < newAddresses.size(); i++) {
-                    PreparedStatement preparedStatement1 = connection.prepareStatement(insert_addresses);
+                     preparedStatement1 = connection.prepareStatement(insert_addresses);
                     preparedStatement1.setInt(1, hiddenId);
                     preparedStatement1.setString(2, newAddresses.get(i).getAddressLine1());
                     preparedStatement1.setString(3, newAddresses.get(i).getAddressLine2());
@@ -368,28 +422,37 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                     preparedStatement1.setString(6, newAddresses.get(i).getState());
                     preparedStatement1.executeUpdate();
                 }
-                }
-                else {
-                    log.error("Connection is null");
-                }
+            } else {
+                log.error("Connection is null");
+            }
 
-                
         } catch (Exception e) {
             log.error("Exception:" + e);
 
         }
+        finally {
+            try {
+                if (preparedStatement1 != null)
+                     preparedStatement1.close();
+
+               
+
+            } catch (Exception e) {
+                log.error("Excs:" + e);
+            }
+        }
 
     }
 
-	public void updateaddress(ArrayList<AddressBean> addresses, int hiddenId) {
+    public void updateaddress(ArrayList<AddressBean> addresses, int hiddenId) {
+        PreparedStatement preparedStatement1 = null;
         try {
 
             Connection connection = getDBConnection();
             if (connection != null) {
-                PreparedStatement preparedStatement1 = null;
                 for (int i = 0; i < addresses.size(); i++) {
                     log.info("updating data");
-                    preparedStatement1  = connection.prepareStatement(update_addresses);    
+                    preparedStatement1 = connection.prepareStatement(update_addresses);
                     preparedStatement1.setString(1, addresses.get(i).getAddressLine1());
                     preparedStatement1.setString(2, addresses.get(i).getAddressLine2());
                     preparedStatement1.setString(3, addresses.get(i).getCity());
@@ -399,58 +462,71 @@ public class Userdao extends DBConnection implements UserdaoInterface {
                     preparedStatement1.setInt(7, addresses.get(i).getAddressId());
                     preparedStatement1.executeUpdate();
                 }
-                
 
-                }
-                else {
-                    log.error("Connection is null");
-                }
+            } else {
+                log.error("Connection is null");
+            }
 
-            
         } catch (Exception e) {
             log.error("Exception:" + e);
 
         }
-        
-
-	}
-
-	public void updateNewUserDetails(UserBean updateUser) {
+        finally {
             try {
-                
-                Connection connection = getDBConnection();
-                if (connection != null) {
-                    PreparedStatement preparedStatement = connection.prepareStatement(update_user);
-                    preparedStatement.setString(1, updateUser.getFirstName());
-                    preparedStatement.setString(2, updateUser.getLastName());
-                    preparedStatement.setString(3, updateUser.getEmail());
-                    preparedStatement.setString(4, updateUser.getPhone());
-                    preparedStatement.setString(5, updateUser.getGender());
-                    preparedStatement.setString(6, updateUser.getDob());
-                    final String secretKey = "ssshhhhhhhhhhh!!!!";
-                    String encryptedString = AES.encrypt(updateUser.getPass(), secretKey);
-                   
-                    // preparedStatement.setString(7, updateUser.getPass());
-                     preparedStatement.setString(7, encryptedString);
-                    preparedStatement.setString(8, updateUser.getSecurityAns());
-                    preparedStatement.setBlob(9, updateUser.getImage());
-                    preparedStatement.setInt(10, updateUser.getId());
-                    preparedStatement.executeUpdate();
-                   
-                    }
-                    
+                if (preparedStatement1 != null)
+                preparedStatement1.close();
 
-                 else {
-                    log.error("Connection Not Established");
-                }
-    
+
             } catch (Exception e) {
-                log.error("Exception:" + e);
+                log.error("Excs:" + e);
             }
-            
         }
 
+    }
 
-	}
+    public void updateNewUserDetails(UserBean updateUser) {
+        PreparedStatement preparedStatement = null;
+        try {
 
+            Connection connection = getDBConnection();
+            if (connection != null) {
+                preparedStatement = connection.prepareStatement(update_user);
+                preparedStatement.setString(1, updateUser.getFirstName());
+                preparedStatement.setString(2, updateUser.getLastName());
+                preparedStatement.setString(3, updateUser.getEmail());
+                preparedStatement.setString(4, updateUser.getPhone());
+                preparedStatement.setString(5, updateUser.getGender());
+                preparedStatement.setString(6, updateUser.getDob());
+                final String secretKey = "ssshhhhhhhhhhh!!!!";
+                String encryptedString = AES.encrypt(updateUser.getPass(), secretKey);
 
+                // preparedStatement.setString(7, updateUser.getPass());
+                preparedStatement.setString(7, encryptedString);
+                preparedStatement.setString(8, updateUser.getSecurityAns());
+                preparedStatement.setBlob(9, updateUser.getImage());
+                preparedStatement.setInt(10, updateUser.getId());
+                preparedStatement.executeUpdate();
+
+            }
+
+            else {
+                log.error("Connection Not Established");
+            }
+
+        } catch (Exception e) {
+            log.error("Exception:" + e);
+        }
+        finally {
+            try {
+                if (preparedStatement != null)
+                preparedStatement.close();
+
+              
+            } catch (Exception e) {
+                log.error("Excs:" + e);
+            }
+        }
+
+    }
+
+}

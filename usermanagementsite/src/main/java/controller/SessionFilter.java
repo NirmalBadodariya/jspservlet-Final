@@ -22,7 +22,7 @@ public class SessionFilter implements Filter {
         HttpSession session = request.getSession(false);
         String mail = (String) session.getAttribute("email");
 
-        if (null == mail || session == null) {
+        if (mail.equals("")) {
             response.setHeader("Cache-Control", "no-store"); // Directs caches not to store the page under any
                                                              // circumstance
             response.setHeader("Cache-Control", "no-cache"); // Forces caches to obtain a new copy of the page from the

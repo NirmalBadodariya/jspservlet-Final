@@ -16,7 +16,7 @@ public class UserBean {
     private InputStream image;
     private ArrayList<AddressBean> addresses ;
     private String base64Image;
-     
+
     public String getBase64Image() {
         return base64Image;
     }
@@ -45,13 +45,13 @@ public class UserBean {
     }
 
     public ArrayList<AddressBean> getAddresses() {
-        return addresses;
+        return (ArrayList<AddressBean>) addresses.clone();
     }
 
     public void setAddresses(ArrayList<AddressBean> addresses) {
-        this.addresses = addresses;
+        this.addresses = new ArrayList<>(addresses);
     }
-
+    
     public void setPass(String pass) {
         this.pass = pass;
     }

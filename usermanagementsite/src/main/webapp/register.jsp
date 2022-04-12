@@ -5,7 +5,6 @@
 <%@page import="model.AddressBean"%>
 <%@page import="java.util.ArrayList"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -210,14 +209,14 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label" for="address_line_one_0">Address line 1</label>
-                                            <input type="text" id="address_line_one_0" class="form-control" name="Address[0][address_line1]" maxlength="255" >
+                                            <input type="text" id="address_line_one_0" class="form-control" name="Address[0][address_line1]" maxlength="255" required>
                                             <p class="help-block help-block-error"></p>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label class="control-label" for="address_line_two_0">Address line 2</label>
-                                            <input type="text" id="address_line_two_0" class="form-control" name="Address[0][address_line2]" maxlength="255" >
+                                            <input type="text" id="address_line_two_0" class="form-control" name="Address[0][address_line2]" maxlength="255" required>
                                             <p class="help-block help-block-error"></p>
                                         </div>
                                     </div>
@@ -256,7 +255,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                         <div class="form-group">
-                                        <input class="form-control" id="pincode_0" type="number" name="Address[0][pincode]" placeholder="pincode" >
+                                        <input class="form-control" id="pincode_0" type="number" name="Address[0][pincode]" placeholder="pincode" required>
                                         </div>
                                         </div>
                                 <div class="row">
@@ -497,7 +496,7 @@ try {
     // for(var j=0;j<count;j++){
     // $(document).on('keyup', '#address_line_one_'+j, checkAddress());
     // }
-    function checkAddress() {`
+    function checkAddress() {
         var temp=0;
         // alert(count);
         for(var i = 0;i<count;i++){
@@ -512,8 +511,8 @@ try {
              while(addressLineOne=="" || addressLineTwo=="" || pincode==""){
 
                 //  alert(document.getElementById("add-more").innerHTML);
-                        document.getElementById('add-more-hidden').classList.remove('d-none');
-                        document.getElementById('add-more').classList.add('d-none');
+                        // document.getElementById('add-more-hidden').classList.remove('d-none');
+                        // document.getElementById('add-more').classList.add('d-none');
                          
                 //      $("#add-more").click(function(){return false;});
                     //  document.getElementById("add-more").disabled=true;
